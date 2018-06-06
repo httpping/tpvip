@@ -14,8 +14,16 @@
     </modules>
 
     <properties>
+        <!-- 使用UTF-8编码  -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- 使用jdk1.8版本  -->
         <java.version>1.8</java.version>
         <fast.json.version>1.2.47</fast.json.version>
+        <druid.version>1.0.23</druid.version>
+        <mybatisplus.version>2.1.8</mybatisplus.version>
+        <mybatis-plus-boot-starter.version>2.1.9</mybatis-plus-boot-starter.version>
+        <fastjson.version>1.2.39</fastjson.version>
 
     </properties>
 
@@ -42,6 +50,12 @@
         </dependency>
 
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>${druid.version}</version>
+        </dependency>
+
         <!--热启动：每自修改后， 程序自动启动spring Application上下文。 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -60,6 +74,18 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--不需要添加 Mybatis及Mybatis-Spring依赖，Mybatis-Plus会自动维护-->
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>${mybatis-plus-boot-starter.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>tomcat-jdbc</artifactId>
+                    <groupId>org.apache.tomcat</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
 
     <build>

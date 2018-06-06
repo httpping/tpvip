@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class DemoControl {
 
-
-    @PostMapping("/")
+    @PostMapping("/hello")
     public BaseResult sayHello(){
         log.info("hello world!");
         BaseResult baseResult = new BaseResult();
