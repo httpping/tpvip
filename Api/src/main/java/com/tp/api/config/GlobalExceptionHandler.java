@@ -1,18 +1,27 @@
 package com.tp.api.config;
 
+import com.tp.api.constant.ReturnCodeEnum;
 import com.tp.api.exception.NoFoundExcepiton;
 import com.tp.common.bean.BaseResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.Locale;
+import java.util.Set;
 
 @CrossOrigin
+
+@ControllerAdvice
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -34,4 +43,7 @@ public class GlobalExceptionHandler {
 		return new BaseResult(500, ex.getMessage(), null);
 		
 	}
+
+
+
 }

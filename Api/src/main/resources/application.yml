@@ -9,6 +9,9 @@ logging:
   config: classpath:logback-boot.xml
 
 spring:
+  messages:
+    basename: i18n/messages
+    encoding: utf-8
   #数据源配置
   datasource:
     url: jdbc:mysql://localhost:3306/cmvip
@@ -17,7 +20,21 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     connectionProperties: druid.stat.mergeSql=true
-
+    druid:
+      stat-view-servlet:
+        enabled: true
+        login-password: 123456
+        login-username: tp
+        url-pattern: /druid/*
+      filter:
+        wall:
+          db-type: mysql
+          enabled: true
+        stat:
+          log-slow-sql: true
+          db-type: mysql
+          enabled: true
+          slow-sql-millis: 200
 #mybatis:
 #  #实体类所做包
 #  type-aliases-package: learning.model
@@ -55,4 +72,5 @@ mybatis-plus:
   configuration:
     map-underscore-to-camel-case: true
     cache-enabled: false
+
 
