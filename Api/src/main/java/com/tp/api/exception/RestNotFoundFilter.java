@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Locale;
 
+/***
+ *  http 普通错误抓取
+ */
 @RestController
 public class RestNotFoundFilter implements ErrorController {
     @Autowired
