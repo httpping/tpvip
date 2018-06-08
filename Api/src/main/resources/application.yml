@@ -9,6 +9,10 @@ logging:
   config: classpath:logback-boot.xml
 
 spring:
+  cache:
+    type: ehcache
+    ehcache:
+      config: classpath:ehcache.xml
   messages:
     basename: i18n/messages
     encoding: utf-8

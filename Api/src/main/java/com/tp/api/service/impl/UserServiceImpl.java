@@ -4,6 +4,9 @@ import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.tp.api.entity.User;
 import com.tp.api.mapper.UserMapper;
 import com.tp.api.service.IUserService;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.List;
  *
  */
 
+@Slf4j
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
 
@@ -23,8 +27,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 		return retBool(baseMapper.deleteAll());
 	}
 
+
+	@Cacheable("tp_vip")
 	@Override
 	public List<User> selectListBySQL() {
+		log.info("cache test");
 		return baseMapper.selectListBySQL();
 	}
 
