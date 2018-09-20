@@ -35,6 +35,7 @@ public class TbLogController {
 
         List<TbLog> result = tbLogService.findAll(request);
 
+        model.addAttribute("domain",request.getDomain());
         model.addAttribute("logs",result);
 
         return "/api";

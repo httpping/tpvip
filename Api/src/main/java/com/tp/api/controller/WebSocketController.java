@@ -56,7 +56,6 @@ public class WebSocketController {
     @ResponseBody
     public String logCat(@RequestBody LoggerMessage logcat){
 //        System.out.println(logcat.body);
-        simpMessagingTemplate.convertAndSend(topic,logcat);
 
         try {
             //需要统计
@@ -69,12 +68,15 @@ public class WebSocketController {
                 tbLog.setResponse(logcat.getResponse());
                 tbLog.setVersion(logcat.getVersion());
                 tbLog.setFeeTime(logcat.getFeeTime());
-                tbLogService.save(tbLog);
+                tbLog = tbLogService.save(tbLog);
+
+                String link = "&nbsp;&nbsp;&nbsp;<a href='/api/show/" +tbLog.getId()+"'>查看格式化详情</a>" ;
+                logcat.setTimestamp(logcat.getTimestamp() + link);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        simpMessagingTemplate.convertAndSend(topic,logcat);
 
         return  "success";
     }

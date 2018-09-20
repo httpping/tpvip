@@ -45,7 +45,7 @@ public class MybatisPlusConfig {
          */
         List<ISqlParser> sqlParserList = new ArrayList<>();
         TenantSqlParser tenantSqlParser = new TenantSqlParser();
-        tenantSqlParser.setTenantHandler(new TenantHandler() {
+        /*tenantSqlParser.setTenantHandler(new TenantHandler() {
             @Override
             public Expression getTenantId() {
                 return new LongValue(1L);
@@ -59,17 +59,17 @@ public class MybatisPlusConfig {
             @Override
             public boolean doTableFilter(String tableName) {
                 // 这里可以判断是否过滤表
-                /*
+                *//*
                 if ("user".equals(tableName)) {
                     return true;
-                }*/
+                }*//*
                 return false;
             }
-        });
+        });*/
 
 
 
-        sqlParserList.add(tenantSqlParser);
+//        sqlParserList.add(tenantSqlParser);
         paginationInterceptor.setSqlParserList(sqlParserList);
         // 以下过滤方式与 @SqlParser(filter = true) 注解等效
 //        paginationInterceptor.setSqlParserFilter(new ISqlParserFilter() {

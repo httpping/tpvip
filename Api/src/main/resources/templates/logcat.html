@@ -8,12 +8,22 @@
     <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
     <!-- Bootstrap -->
 
+    <style>
+
+        a{
+            color: red;
+        }
+
+    </style>
+
 </head>
 <body>
 <button onclick="openSocket()">开启日志</button><button onclick="closeSocket()">关闭日志</button>  &nbsp;&nbsp;
 <button onclick="clearLog()">清除日志</button>
-<button onclick="openOld()">历史日志</button>
+<button onclick="openOld()" style="color: blue;">历史日志(new)</button>
 <button onclick="openApi()">API 接入</button>
+<button onclick="druidControler()">性能监控</button>
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 用户过滤id:<input type="text"  id="user_id" value="" onchange="userIdChange()"/>
 <input type="checkbox"  id="android" checked="checked"  onchange="levelChange()"> android </input>  &nbsp;&nbsp;
 <input type="checkbox"  id="ios"  onchange="levelChange()">ios</input>
@@ -174,6 +184,11 @@
     function openOld() {
         closeSocket();
         window.location.href = "/api"
+    }
+
+    function druidControler() {
+        closeSocket();
+        window.location.href = "/druid"
     }
 
     /**

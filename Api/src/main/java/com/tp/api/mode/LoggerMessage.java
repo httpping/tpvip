@@ -55,6 +55,8 @@ public class LoggerMessage{
     @ApiModelProperty("版本")
     private String version;
     @ApiModelProperty("花费的时间")
+
+
     private int feeTime;
 
 

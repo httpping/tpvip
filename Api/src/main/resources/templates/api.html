@@ -20,27 +20,29 @@
     </style>
 </head>
 <body>
-<h1>API 日志!</h1>
+<h1>移动研发日志系统</h1>
 <!--
 <input type="text"  id="platform_name" class="form-control" placeholder="平台过滤:" aria-label="平台过滤:" />
 <button onclick="clearLog()" type="button" class="btn btn-dark">清除历史日志(默认所有)</button>
 -->
 
 <div class="input-group mb-3" style="width:95%">
-    <input  id="platform_name" type="text" class="form-control" placeholder="过滤平台" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <input  th:value="${domain}" id="platform_name" type="text" class="form-control" placeholder="过滤平台" aria-label="Recipient's username" aria-describedby="basic-addon2">
     &nbsp;&nbsp;&nbsp;
     <div class="input-group-append">
-        <button class="btn btn-outline-secondary" type="button"  onclick="clearLog()">清除历史日志</button>
+        <button  onclick="search()" class="btn btn-outline-secondary" type="button" >搜索历史日志</button>
+        &nbsp;&nbsp;&nbsp;
+        <button  onclick="clearLog()" class="btn btn-outline-secondary" type="button" >清除历史日志</button>
     </div>
 </div>
 
-<table class="table ">
+<table class="table table-hover">
     <thead class="thead-dark">
     <tr>
         <th scope="col">#</th>
         <th scope="col">Url</th>
         <th scope="col">Platform</th>
-        <th scope="col">FeeTime</th>
+        <th scope="col">FeeTime(ms)</th>
         <th scope="col">UpdateTime</th>
         <th scope="col">Option</th>
     </tr>
@@ -88,6 +90,7 @@
             data: JSON.stringify({domain:domain}),
             dataType: "json",
             success: function (message) {
+                search()
                 if (message > 0) {
                     alert("请求已提交！我们会尽快与您取得联系");
                 }
@@ -96,6 +99,11 @@
                 $("#request-process-patent").html("提交数据失败！");
             }
         });
+    }
+
+    function search() {
+        var domain = $('#platform_name').val();
+        window.location.href ='/api?domain='+domain;
     }
 
 </script>
