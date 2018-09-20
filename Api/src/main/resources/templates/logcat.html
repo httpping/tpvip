@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>WebSocket Logger</title>
+    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+    <!-- Bootstrap -->
+
+</head>
+<body>
+<button onclick="openSocket()">开启日志</button><button onclick="closeSocket()">关闭日志</button>  &nbsp;&nbsp;
+<button onclick="clearLog()">清除日志</button>
+<button onclick="openOld()">历史日志</button>
+<button onclick="openApi()">API 接入</button>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 用户过滤id:<input type="text"  id="user_id" value="" onchange="userIdChange()"/>
+<input type="checkbox"  id="android" checked="checked"  onchange="levelChange()"> android </input>  &nbsp;&nbsp;
+<input type="checkbox"  id="ios"  onchange="levelChange()">ios</input>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 平台过滤:<input type="text"  id="platform_name" onchange="plfatformChange()"/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 关键字过滤:<input type="text"  id="url_path" value="" onchange="urlChange()"/>
+
+<hr/>
+<div id="log-container" style="height: 880px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+    <div></div>
+</div>
+<script>
+    var stompClient = null;
+    $(document).ready(function() {
+        openSocket();
+    });
+
+    $("#android").ready(function() {
+        //通过key来获取value
+        var dt = sessionStorage.getItem("user_id");
+        $("#user_id").val(dt);
+
+        var platform = sessionStorage.getItem("platform_name");
+        $("#platform_name").val(platform);
+
+        // if (isNull(platform)){
+        //     $("#platform_name").val("DL");
+        // }
+
+        var url_path = sessionStorage.getItem("url_path");
+        $("#url_path").val(url_path);
+
+        var ios = sessionStorage.getItem("level_ios")
+        var android = sessionStorage.getItem("level_android")
+        if (ios == 'true'){
+            $('#ios').prop('checked',true);
+        }
+        if (android == 'true'){
+            $('#android').prop('checked',true);
+        }
+    });
+
+
+
+    function openSocket() {
+        /*<![CDATA[*/
+
+        if(stompClient==null){
+            var socket = new SockJS('/websocket?token=kl');
+            stompClient = Stomp.over(socket);
+            stompClient.connect({token:"kl"}, function(frame) {
+                stompClient.subscribe('/topic/pullLogger', function(event) {
+
+
+                    var content=JSON.parse(event.body);
+
+
+                    var ios = $('#ios').is(":checked");
+                    var android = $('#android').is(":checked");
+
+
+                    if(ios && android){
+                        //todo
+                    }else{
+                        if (ios) {
+                            if (content.level.toLowerCase().indexOf("ios") < 0) {
+                                return;
+                            }
+                        }
+                        if (android){
+                            if (content.level.toLowerCase().indexOf("android") < 0) {
+                                return;
+                            }
+                        }
+
+                    }
+                    // alert(ios +" -" + android )
+                    var user_id_val = $("#user_id").val(); //获取
+                     if (!isNull(user_id_val)){
+                        if ( user_id_val != content.userId){
+                            return ;
+                        }
+                    }
+
+                    var platform_name = $("#platform_name").val(); //获取
+                    if (!isNull(platform_name)){
+                        if ( platform_name != content.platform){
+                            return ;
+                        }
+                    }
+                    var url_path = sessionStorage.getItem("url_path");
+                    if (!isNull(url_path)){
+                        if (content.body.toLowerCase().indexOf(url_path.toLowerCase()) < 0){
+                            return ;
+                        }
+                    }
+
+
+                    $("#log-container div").append(" ------ " + content.level + " : " + content.timestamp +" ------ ").append("<br/>");
+                    $("#log-container div").append(content.body).append("<br/>");
+                    $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+                },{
+                    token:"kltoen"
+                });
+            });
+        }
+        /*]]>*/
+
+    }
+    function closeSocket() {
+        if (stompClient != null) {
+            stompClient.disconnect();
+            stompClient=null;
+        }
+    }
+
+
+    function clearLog() {
+        $("#log-container div").empty();
+    }
+
+        function isNull(data){
+        return (data == "" || data == undefined || data == null) ? true : false;
+    }
+
+
+    function userIdChange() {
+        var user_id_val = $("#user_id").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("user_id", user_id_val);
+    }
+
+    function plfatformChange() {
+        var platform = $("#platform_name").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("platform_name", platform);
+    }
+
+    function urlChange() {
+        var url_path = $("#url_path").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("url_path", url_path);
+    }
+
+
+    function levelChange() {
+        var user_id_val = $("#user_id").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("user_id", user_id_val);
+
+
+        var ios = $('#ios').is(":checked");
+        var android = $('#android').is(":checked");
+
+        sessionStorage.setItem("level_ios", ios);
+        sessionStorage.setItem("level_android", android);
+    }
+
+    function openOld() {
+        closeSocket();
+        window.location.href = "/api"
+    }
+
+    /**
+     * 接入方法
+     */
+    function openApi() {
+        closeSocket();
+        window.location.href = "/swagger-ui.html"
+    }
+</script>
+
+</body>
+</html>

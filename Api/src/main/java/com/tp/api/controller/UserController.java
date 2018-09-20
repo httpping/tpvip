@@ -1,4 +1,4 @@
-package com.tp.api.control;
+package com.tp.api.controller;
 
 import java.util.Date;
 

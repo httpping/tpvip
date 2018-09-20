@@ -1,29 +1,37 @@
 server:
-    port: 8090
+    port: 8080
 
 
+#public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
 
 logging:
   level:
-    learning: trace
+    learning: debug
   config: classpath:logback-boot.xml
 
 spring:
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  thymeleaf:
+    prefix: classpath:/templates
   cache:
     type: ehcache
     ehcache:
       config: classpath:ehcache.xml
   messages:
-    basename: i18n/messages
+    basename: i18n/mess   ages
     encoding: utf-8
   #数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/cmvip
+    url: jdbc:mysql://10.32.2.230:3306/cmvip
     username: root
     password: 123456
+    public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    connectionProperties: druid.stat.mergeSql=true
+    connection-properties: config.decrypt=true;config.decrypt.key=${spring.datasource.public-key}
+
+#    connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000;config.decrpt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
     druid:
       stat-view-servlet:
         enabled: true
@@ -39,6 +47,14 @@ spring:
           db-type: mysql
           enabled: true
           slow-sql-millis: 200
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=200;config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
+      initial-size: 20
+      #定义最大连接数
+      max-active: 200
+      max-wait: 60000
+
+
+
 #mybatis:
 #  #实体类所做包
 #  type-aliases-package: learning.model
