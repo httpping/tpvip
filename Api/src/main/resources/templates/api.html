@@ -55,7 +55,9 @@
         <td th:text="${log.domain}"></td>
         <td th:text="${log.feeTime}"></td>
         <td th:text="${#dates.format(log.updateTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
-        <td ><a th:href="${ '/api/delete/' + log.id}" class="btn btn-light" >删除</a> &nbsp;&nbsp;&nbsp; <a th:href="${ '/api/show/' + log.id}"  class="btn btn-info">查看</a></td>
+        <td ><a th:href="${ '/api/delete/' + log.id}" class="btn btn-light" >删除</a> &nbsp;&nbsp;&nbsp; <a th:href="${ '/api/show/' + log.id}"  class="btn btn-info">查看</a>
+            &nbsp;&nbsp;&nbsp;   <a th:href="${ '/api/edit/' + log.id}"  class="btn btn-info">模拟</a>
+        </td>
     </tr>
 
     </tbody>
@@ -90,7 +92,7 @@
             data: JSON.stringify({domain:domain}),
             dataType: "json",
             success: function (message) {
-                search()
+                window.reload()
                 if (message > 0) {
                     alert("请求已提交！我们会尽快与您取得联系");
                 }

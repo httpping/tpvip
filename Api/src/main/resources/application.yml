@@ -52,6 +52,10 @@ spring:
       #定义最大连接数
       max-active: 200
       max-wait: 60000
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
 
 
 

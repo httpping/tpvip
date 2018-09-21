@@ -11,6 +11,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +38,10 @@ public class GlobalExceptionHandler {
 		if(ex instanceof NoFoundExcepiton){
 	        LOGGER.error("======="+ex.getMessage()+"=======");
 			return new BaseResult(401, ex.getMessage(), null);
-			
+		}if (ex instanceof NoHandlerFoundException){
+
+			//可以做接口返回处理
+			return new BaseResult(404,ex.getMessage(),null);
 		}
 		
 		return new BaseResult(500, ex.getMessage(), null);
