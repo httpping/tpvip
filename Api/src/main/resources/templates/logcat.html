@@ -23,6 +23,8 @@
 <button onclick="openOld()" style="color: blue;">历史日志(new)</button>
 <button onclick="openApi()">API 接入</button>
 <button onclick="druidControler()">性能监控</button>
+<button onclick="modelControler()">接口模拟</button>
+
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 用户过滤id:<input type="text"  id="user_id" value="" onchange="userIdChange()"/>
 <input type="checkbox"  id="android" checked="checked"  onchange="levelChange()"> android </input>  &nbsp;&nbsp;
@@ -189,6 +191,11 @@
     function druidControler() {
         closeSocket();
         window.location.href = "/druid"
+    }
+
+    function modelControler() {
+        closeSocket();
+        window.location.href = "/model"
     }
 
     /**

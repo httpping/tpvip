@@ -2,7 +2,9 @@ package com.tp.api.config;
 
 import com.tp.api.constant.ReturnCodeEnum;
 import com.tp.api.exception.NoFoundExcepiton;
+import com.tp.api.service.ApiModelService;
 import com.tp.common.bean.BaseResult;
+import io.swagger.annotations.ApiModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
+import java.net.URI;
 import java.util.Locale;
 import java.util.Set;
 
@@ -27,7 +30,22 @@ import java.util.Set;
 public class GlobalExceptionHandler {
 
 	private static Logger LOGGER = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-	
+
+	@Autowired
+	ApiModelService apiModelService;
+
+	@ExceptionHandler(NoHandlerFoundException.class)
+	public String  processNoHandlerException(Exception ex, HttpServletRequest request, HttpServletResponse response){
+
+		String url = request.getRequestURL().toString();
+		String path = URI.create(url).getPath();
+
+		com.tp.api.entity.ApiModel apiModel =  apiModelService.selectByUrl(path);
+
+		return  apiModel.getResponse();
+	}
+
+
 	@ExceptionHandler
 	public BaseResult processException(Exception ex, HttpServletRequest request, HttpServletResponse response){
 		ex.printStackTrace();
