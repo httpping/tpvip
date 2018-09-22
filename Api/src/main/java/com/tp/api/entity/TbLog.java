@@ -23,6 +23,7 @@ public class TbLog extends Model<TbLog> {
     /**
      * ID
      */
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private Long id;
     /**
      * 请求地址
@@ -54,11 +55,17 @@ public class TbLog extends Model<TbLog> {
     private String platform;
 
 
-    private int feeTime;
+    private Integer feeTime;
 
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-    Date updateTime;
-    Date createdTime;
+    Date updateTime = new Date();
+    Date createdTime ;
+
+
+    /**
+     * 是否锁定 锁定后不能一键删除
+     */
+    private int ticket;
 
 
     @Override

@@ -40,6 +40,9 @@ public class WebConfig implements WebMvcConfigurer {
         ObjectMapper objectMapper = builder.build();
         SimpleModule simpleModule = new SimpleModule();
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
+        simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+
         objectMapper.registerModule(simpleModule);
         objectMapper.configure(MapperFeature.PROPAGATE_TRANSIENT_MARKER, true);// 忽略 transient 修饰的属性
 

@@ -37,6 +37,10 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
             if (tbLog.getApiname() != null) {
                 tbLog.setApiname(result.getApiname());
             }
+            //锁定状态不能被修改
+            if (result.getTicket() == 1){
+                return result;
+            }
             tbLog.setId(result.getId());
             tbLog.setCreatedTime(result.getCreatedTime());
 
@@ -46,7 +50,6 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
                 tbLog.setFeeTime(avg);
             }
         }
-        tbLog.setUpdateTime(new Date());
         insertOrUpdate(tbLog);
        return tbLog;
     }
@@ -74,8 +77,15 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
         if (!StringUtils.isEmpty(request.getDomain())) {
             condition.where("domain = {0}", request.getDomain());
         }
+        condition.and("ticket != 1");
+
         baseMapper.delete(condition);
 
         return true;
+    }
+
+    @Override
+    public void ticket(TbLog request) {
+        baseMapper.updateById(request);
     }
 }

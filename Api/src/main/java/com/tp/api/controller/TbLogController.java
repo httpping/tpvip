@@ -1,18 +1,25 @@
 package com.tp.api.controller;
 
 
+import com.tp.api.entity.ApiModel;
 import com.tp.api.entity.TbLog;
 import com.tp.api.mode.LogRequest;
 import com.tp.api.mode.LoggerMessage;
+import com.tp.api.service.ApiModelService;
 import com.tp.api.service.TbLogService;
+import com.tp.common.bean.BaseResult;
 import lombok.extern.slf4j.Slf4j;
+import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
 
+import java.net.URI;
 import java.util.List;
+
+import static com.tp.common.bean.BaseResult.SUCCESS;
 
 /**
  * <p>
@@ -29,6 +36,9 @@ public class TbLogController {
 
     @Autowired
     TbLogService tbLogService;
+
+    @Autowired
+    ApiModelService apiModelService;
 
     @GetMapping
     public String api(Model model,TbLog request){
@@ -49,6 +59,38 @@ public class TbLogController {
         tbLogService.deleteById(id);
         return "redirect:/api";
     }
+
+
+
+    @PostMapping("/ticket")
+    @ResponseBody
+    public BaseResult thicket(@RequestBody TbLog request){
+        log.info("thicket" + request);
+        tbLogService.ticket(request);
+        return BaseResult.created(SUCCESS,"message.common.success");
+    }
+
+
+    @RequestMapping("/model/{id}")
+    public String oneKeyModel(Model model, @PathVariable("id") long id){
+        log.info("oneKeyModel");
+        TbLog log = tbLogService.selectById(id);
+
+        ApiModel apiModel = new ApiModel();
+        apiModel.setApiname(log.getApiname());
+        apiModel.setResponse(log.getResponse());
+        apiModel.setPlatform(log.getPlatform());
+        apiModel.setDomain(log.getDomain());
+        apiModel.setRequest(log.getRequest());
+
+        String path = URI.create(log.getUrl()).getPath().toLowerCase();
+        apiModel.setUrl(path);
+
+        apiModelService.save(apiModel);
+
+        return "redirect:/model/edit/"+apiModel.getId().toString();
+    }
+
 
     @PostMapping("/deleteAll")
     @ResponseBody

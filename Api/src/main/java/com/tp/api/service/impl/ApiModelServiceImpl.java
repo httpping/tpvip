@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,6 +34,12 @@ public class ApiModelServiceImpl extends ServiceImpl<ApiModelMapper, ApiModel> i
         if (!StringUtils.isEmpty(request.getDomain())){
             condition.and("domain = {0}",request.getDomain());
         }
+        if (!StringUtils.isEmpty(request.getCreatedBy())){
+            condition.and("created_by = {0}",request.getCreatedBy());
+        }
+        List desc = new ArrayList();
+        desc.add("update_time");
+        condition.orderDesc(desc);
         List<ApiModel> result = baseMapper.selectList(condition);
 
         return result;
@@ -57,7 +64,6 @@ public class ApiModelServiceImpl extends ServiceImpl<ApiModelMapper, ApiModel> i
             if (apiModels!=null && apiModels.size()>0){
                 result = apiModels.get(0);
                 result.setResponse(request.getResponse());
-                result.setUpdateTime(new Date());
 
                 if (!StringUtils.isEmpty(request.getPlatform())){
                     result.setPlatform(request.getPlatform());
@@ -76,8 +82,8 @@ public class ApiModelServiceImpl extends ServiceImpl<ApiModelMapper, ApiModel> i
             }else {
                 result.setCreatedTime(new Date());
             }
-
-            request.getUrl().toLowerCase();
+            request.setId(result.getId());
+            request.setUrl(request.getUrl().toLowerCase());
             insertOrUpdate(result);
             request= result;
         }else{

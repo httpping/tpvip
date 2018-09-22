@@ -13,6 +13,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BaseResult<T>  {
 
+
+    public static  final int SUCCESS = 200;
+
     public int code;
     public String message;
     public T data;

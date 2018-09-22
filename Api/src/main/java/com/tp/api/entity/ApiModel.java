@@ -24,7 +24,7 @@ public class ApiModel extends Model<ApiModel> {
     private String response;
     private String request;
     private Date createdTime;
-    private Date updateTime;
+    private Date updateTime = new Date();
     private String createdBy;
     private String domain;
     private String platform;
