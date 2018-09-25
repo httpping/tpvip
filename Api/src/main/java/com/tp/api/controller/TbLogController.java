@@ -47,7 +47,7 @@ public class TbLogController {
 
         model.addAttribute("domain",request.getDomain());
         model.addAttribute("logs",result);
-
+        model.addAttribute("headerTitle","Api 历史记录");
         return "/api";
     }
 
@@ -88,6 +88,7 @@ public class TbLogController {
 
         apiModelService.save(apiModel);
 
+
         return "redirect:/model/edit/"+apiModel.getId().toString();
     }
 
@@ -106,6 +107,9 @@ public class TbLogController {
         TbLog log =  tbLogService.selectById(id);
 
         model.addAttribute("log",log);
+
+        model.addAttribute("headerTitle","Api 接口详情");
+
         return "/api_show";
     }
 }

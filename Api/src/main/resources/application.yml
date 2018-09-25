@@ -1,5 +1,5 @@
 server:
-    port: 8080
+    port: 8090
 
 
 #public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==

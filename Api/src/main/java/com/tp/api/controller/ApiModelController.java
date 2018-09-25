@@ -36,6 +36,7 @@ public class ApiModelController {
         List<ApiModel> result = apiModelService.findAll(request);
         model.addAttribute("request",request);
         model.addAttribute("models",result);
+        model.addAttribute("headerTitle","Api-模拟系统");
 
         return "/model/index";
     }
@@ -50,6 +51,7 @@ public class ApiModelController {
 
         model.addAttribute("model",request);
         model.addAttribute("success",false);
+        model.addAttribute("headerTitle","Api-模型编辑");
 
 
         return "/model/edit";
@@ -67,6 +69,8 @@ public class ApiModelController {
         apiModelService.save(request);
         model.addAttribute("model",request);
         model.addAttribute("success",true);
+        model.addAttribute("headerTitle","Api-模型编辑");
+
         return "/model/edit";
     }
 }
