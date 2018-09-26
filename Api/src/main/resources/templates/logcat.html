@@ -10,7 +10,7 @@
 
     <style>
 
-        a{
+        a {
             color: red;
         }
 
@@ -18,7 +18,8 @@
 
 </head>
 <body>
-<button onclick="openSocket()">开启日志</button><button onclick="closeSocket()">关闭日志</button>  &nbsp;&nbsp;
+<button onclick="openSocket()">开启日志</button>
+<button onclick="closeWebSocket()">关闭日志</button> &nbsp;&nbsp;
 <button onclick="clearLog()">清除日志</button>
 <button onclick="openOld()" style="color: blue;">历史日志(new)</button>
 <button onclick="openApi()">API 接入</button>
@@ -26,23 +27,23 @@
 <button onclick="modelControler()">接口模拟</button>
 
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 用户过滤id:<input type="text"  id="user_id" value="" onchange="userIdChange()"/>
-<input type="checkbox"  id="android" checked="checked"  onchange="levelChange()"> android </input>  &nbsp;&nbsp;
-<input type="checkbox"  id="ios"  onchange="levelChange()">ios</input>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 平台过滤:<input type="text"  id="platform_name" onchange="plfatformChange()"/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 关键字过滤:<input type="text"  id="url_path" value="" onchange="urlChange()"/>
-
+&nbsp;&nbsp;&nbsp; 用户过滤id:<input type="text" id="user_id" value="" onchange="userIdChange()"/>
+<input type="checkbox" id="android" checked="checked" onchange="levelChange()"> android </input> &nbsp;&nbsp;
+<input type="checkbox" id="ios" onchange="levelChange()">ios</input>
+&nbsp;&nbsp;&nbsp; 平台过滤:<input type="text" id="platform_name" onchange="plfatformChange()"/>
+&nbsp;&nbsp;&nbsp; 关键字过滤:<input type="text" id="url_path" value="" onchange="urlChange()"/>
+&nbsp; <input id="text" type="text" placeholder="匿名勾搭" onkeydown="send()"/>
+</div>
 <hr/>
 <div id="log-container" style="height: 880px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
     <div></div>
 </div>
 <script>
-    var stompClient = null;
-    $(document).ready(function() {
+    $(document).ready(function () {
         openSocket();
     });
 
-    $("#android").ready(function() {
+    $("#android").ready(function () {
         //通过key来获取value
         var dt = sessionStorage.getItem("user_id");
         $("#user_id").val(dt);
@@ -59,85 +60,78 @@
 
         var ios = sessionStorage.getItem("level_ios")
         var android = sessionStorage.getItem("level_android")
-        if (ios == 'true'){
-            $('#ios').prop('checked',true);
+        if (ios == 'true') {
+            $('#ios').prop('checked', true);
         }
-        if (android == 'true'){
-            $('#android').prop('checked',true);
+        if (android == 'true') {
+            $('#android').prop('checked', true);
         }
     });
 
 
+    //打开socket
+    var websocket = null;
 
     function openSocket() {
         /*<![CDATA[*/
 
-        if(stompClient==null){
-            var socket = new SockJS('/websocket?token=kl');
-            stompClient = Stomp.over(socket);
-            stompClient.connect({token:"kl"}, function(frame) {
-                stompClient.subscribe('/topic/pullLogger', function(event) {
-
-
-                    var content=JSON.parse(event.body);
-
-
-                    var ios = $('#ios').is(":checked");
-                    var android = $('#android').is(":checked");
-
-
-                    if(ios && android){
-                        //todo
-                    }else{
-                        if (ios) {
-                            if (content.level.toLowerCase().indexOf("ios") < 0) {
-                                return;
-                            }
-                        }
-                        if (android){
-                            if (content.level.toLowerCase().indexOf("android") < 0) {
-                                return;
-                            }
-                        }
-
-                    }
-                    // alert(ios +" -" + android )
-                    var user_id_val = $("#user_id").val(); //获取
-                     if (!isNull(user_id_val)){
-                        if ( user_id_val != content.userId){
-                            return ;
-                        }
-                    }
-
-                    var platform_name = $("#platform_name").val(); //获取
-                    if (!isNull(platform_name)){
-                        if ( platform_name != content.platform){
-                            return ;
-                        }
-                    }
-                    var url_path = sessionStorage.getItem("url_path");
-                    if (!isNull(url_path)){
-                        if (content.body.toLowerCase().indexOf(url_path.toLowerCase()) < 0){
-                            return ;
-                        }
-                    }
-
-
-                    $("#log-container div").append(" ------ " + content.level + " : " + content.timestamp +" ------ ").append("<br/>");
-                    $("#log-container div").append(content.body).append("<br/>");
-                    $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
-                },{
-                    token:"kltoen"
-                });
-            });
+        if (websocket != null) {
+            closeWebSocket()
         }
+
+        var curHost = window.location.href;
+        var parser = document.createElement('a');
+        parser.href = curHost
+
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            websocket = new WebSocket("ws://" + parser.host + "/websocket");
+        }
+        else {
+            alert('Not support websocket')
+        }
+
+        //连接发生错误的回调方法
+        websocket.onerror = function () {
+            setMessageInnerHTML("连接出错了...");
+        };
+
+        //连接成功建立的回调方法
+        websocket.onopen = function (event) {
+            setMessageInnerHTML("连接成功了...");
+        }
+
+        //接收到消息的回调方法
+        websocket.onmessage = function (event) {
+            setMessageInnerHTML(event.data);
+        }
+
+        //连接关闭的回调方法
+        websocket.onclose = function () {
+            setMessageInnerHTML("连接关闭了...");
+        }
+
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function () {
+            websocket.close();
+        }
+
         /*]]>*/
 
     }
-    function closeSocket() {
-        if (stompClient != null) {
-            stompClient.disconnect();
-            stompClient=null;
+
+
+    //关闭连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+    //发送消息
+    function send() {
+//        alert(event.keyCode())
+        if(event.keyCode == "13") {
+            var message = document.getElementById('text').value;
+            websocket.send( message  + "." );
         }
     }
 
@@ -146,7 +140,7 @@
         $("#log-container div").empty();
     }
 
-        function isNull(data){
+    function isNull(data) {
         return (data == "" || data == undefined || data == null) ? true : false;
     }
 
@@ -184,17 +178,17 @@
     }
 
     function openOld() {
-        closeSocket();
+
         window.location.href = "/api"
     }
 
     function druidControler() {
-        closeSocket();
+
         window.location.href = "/druid"
     }
 
     function modelControler() {
-        closeSocket();
+
         window.location.href = "/model"
     }
 
@@ -202,9 +196,80 @@
      * 接入方法
      */
     function openApi() {
-        closeSocket();
-        window.location.href = "/swagger-ui.html"
+         window.location.href = "/swagger-ui.html"
     }
+
+
+    var number = 1;
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+
+        var content
+        try {
+            content = JSON.parse(innerHTML);
+        }
+        catch (err) {
+            // alert(innerHTML)
+            $("#log-container div").append("<span style='color: red;'>来自远方的消息： </span>");
+            $("#log-container div").append(innerHTML).append("<br/>");
+            $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+            return
+        }
+
+
+        var ios = $('#ios').is(":checked");
+        var android = $('#android').is(":checked");
+
+
+        if (ios && android) {
+            //todo
+        } else {
+            if (ios) {
+                if (content.level.toLowerCase().indexOf("ios") < 0) {
+                    return;
+                }
+            }
+            if (android) {
+                if (content.level.toLowerCase().indexOf("android") < 0) {
+                    return;
+                }
+            }
+
+        }
+        // alert(ios +" -" + android )
+        var user_id_val = $("#user_id").val(); //获取
+        if (!isNull(user_id_val)) {
+            if (user_id_val != content.userId) {
+                return;
+            }
+        }
+
+        var platform_name = $("#platform_name").val(); //获取
+        if (!isNull(platform_name)) {
+            if (platform_name != content.platform) {
+                return;
+            }
+        }
+        var url_path = sessionStorage.getItem("url_path");
+        if (!isNull(url_path)) {
+            if (content.body.toLowerCase().indexOf(url_path.toLowerCase()) < 0) {
+                return;
+            }
+        }
+
+        $("#log-container div").append(" ------ " + content.level + " : " + content.timestamp + " ------ ").append("<br/>");
+        $("#log-container div").append(content.body).append("<br/>");
+        $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+
+        number++;
+        if (number >= 100) {
+            number = 0;
+            document.getElementById('message').innerHTML = '<br/>';
+        }
+    }
+
+
 </script>
 
 </body>
