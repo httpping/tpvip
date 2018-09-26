@@ -46,6 +46,8 @@ public class TbLogController {
         List<TbLog> result = tbLogService.findAll(request);
 
         model.addAttribute("domain",request.getDomain());
+        model.addAttribute("url",request.getUrl());
+
         model.addAttribute("logs",result);
         model.addAttribute("headerTitle","Api 历史记录");
         return "/api";
@@ -103,7 +105,8 @@ public class TbLogController {
     }
 
     @RequestMapping("/show/{id}")
-    public String show(Model model, @PathVariable("id") long id){
+    public String showId(Model model, @PathVariable("id") long id,TbLog request){
+        log.info("show ----");
         TbLog log =  tbLogService.selectById(id);
 
         model.addAttribute("log",log);
@@ -112,6 +115,17 @@ public class TbLogController {
 
         return "/api_show";
     }
+
+    @RequestMapping("/show")
+    public String showByUrl(Model model,TbLog request){
+        log.info("show ----");
+        TbLog log =  tbLogService.findByUrl(request);
+        model.addAttribute("log",log);
+        model.addAttribute("headerTitle","Api 接口详情");
+
+        return "/api_show";
+    }
+
 }
 
 

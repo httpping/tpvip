@@ -1,5 +1,7 @@
 package com.tp.api.controller;
 
+import com.baomidou.mybatisplus.toolkit.IdWorker;
+import com.baomidou.mybatisplus.toolkit.StringUtils;
 import com.tp.api.entity.TbLog;
 import com.tp.api.mode.LoggerMessage;
 import com.tp.api.service.TbLogService;
@@ -13,13 +15,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.net.URLEncoder;
 import java.security.Principal;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Api(value = "上传推送接口 -- 重要",description = "上传推送接口 -- 重要")
 @Controller
 public class WebSocketController {
 
     public static String topic = "/topic/pullLogger";
+
+    ExecutorService executorService = Executors.newFixedThreadPool(5);
 
     @Autowired
     TbLogService tbLogService;
@@ -58,6 +65,7 @@ public class WebSocketController {
 //        System.out.println(logcat.body);
 
         try {
+
             //需要统计
             if (logcat.getUrl()!=null){
                 TbLog tbLog = new TbLog();
@@ -68,16 +76,36 @@ public class WebSocketController {
                 tbLog.setResponse(logcat.getResponse());
                 tbLog.setVersion(logcat.getVersion());
                 tbLog.setFeeTime(logcat.getFeeTime());
-                tbLog = tbLogService.save(tbLog);
-
-                String link = "&nbsp;&nbsp;&nbsp;<a href='/api/show/" +tbLog.getId()+"'>查看格式化详情</a>" ;
-                logcat.setTimestamp(logcat.getTimestamp() + link);
+                tbLog.setId(IdWorker.getId());
+                exce(tbLog);
+                String url = URLEncoder.encode(tbLog.getUrl(),"utf-8");
+                String link = "&nbsp;&nbsp;&nbsp;<a href='/api/show?url=" +url+"'>查看格式化详情</a>" ;
+                logcat.setBody(link + logcat.getBody() +" <br/>");
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        simpMessagingTemplate.convertAndSend(topic,logcat);
+
+        if (!StringUtils.isEmpty(logcat.getPlatform())){
+            simpMessagingTemplate.convertAndSend(topic,logcat);
+        }else {
+            simpMessagingTemplate.convertAndSend(topic,logcat);
+        }
+
+
 
         return  "success";
+    }
+
+    private void exce(final TbLog tbLog){
+        if (executorService == null){
+            executorService = Executors.newFixedThreadPool(5);
+        }
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                  tbLogService.save(tbLog);
+            }
+        });
     }
 }

@@ -63,6 +63,10 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
         if (!StringUtils.isEmpty(request.getDomain())) {
             condition.where("domain = {0}", request.getDomain());
         }
+        if (!StringUtils.isEmpty(request.getUrl())){
+            condition.and("url like {0}", "%" +request.getUrl() +"%");
+        }
+
         List desc = new ArrayList();
         desc.add("update_time");
         condition.orderDesc(desc);
@@ -87,5 +91,24 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
     @Override
     public void ticket(TbLog request) {
         baseMapper.updateById(request);
+    }
+
+    @Override
+    public TbLog findByUrl(TbLog request) {
+
+        Condition condition =  Condition.create();
+
+        if (!StringUtils.isEmpty(request.getUrl())){
+            condition.and("url = {0}",  request.getUrl());
+        }
+
+        List desc = new ArrayList();
+        desc.add("update_time");
+        condition.orderDesc(desc);
+        List<TbLog> logs = baseMapper.selectList(condition);
+        if (logs.size()>0){
+            return logs.get(0);
+        }
+        return null;
     }
 }

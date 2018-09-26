@@ -18,14 +18,17 @@
 
 </header>
 
-
 <!--
 <input type="text"  id="platform_name" class="form-control" placeholder="平台过滤:" aria-label="平台过滤:" />
 <button onclick="clearLog()" type="button" class="btn btn-dark">清除历史日志(默认所有)</button>
 -->
 <div style="margin: 20px">
 <div class="input-group mb-3" style="width:95%">
+
+    <input  th:value="${url}" id="platform_url" type="text" class="form-control" placeholder="过滤Url" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    &nbsp;&nbsp;&nbsp;
     <input  th:value="${domain}" id="platform_name" type="text" class="form-control" placeholder="过滤平台" aria-label="Recipient's username" aria-describedby="basic-addon2">
+
     &nbsp;&nbsp;&nbsp;
     <div class="input-group-append">
         <button  onclick="search()" class="btn btn-outline-secondary" type="button" >搜索历史日志</button>
@@ -118,7 +121,8 @@
 
     function search() {
         var domain = $('#platform_name').val();
-        window.location.href ='/api?domain='+domain;
+        var url = $('#platform_url').val();
+        window.location.href ='/api?domain='+domain +'&url='+url;
     }
 
 </script>

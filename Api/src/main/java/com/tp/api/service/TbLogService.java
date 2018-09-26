@@ -24,4 +24,8 @@ public interface TbLogService extends IService<TbLog> {
     boolean deleteAll(LoggerMessage request);
 
     void ticket(TbLog request);
+
+
+    TbLog findByUrl(TbLog request);
+
 }

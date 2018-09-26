@@ -71,7 +71,6 @@
 
 
 
-
 <form th:action="@{/model/edit}" method="post" >
     <input type="hidden" id="id"  name="id" th:value="${model.id}" >
 
@@ -113,6 +112,9 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Submit</button>
+    &nbsp;&nbsp;&nbsp;
+    <a type="button" class="btn btn-link" th:if="${model.id != null}" th:href="${model.url}">See Details</a>
+
 </form>
 
 </div>
