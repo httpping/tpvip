@@ -203,6 +203,7 @@
     }
 
 
+    var max_logs = 35;
     var number = 1;
 
     //将消息显示在网页上
@@ -214,10 +215,16 @@
         }
         catch (err) {
             // alert(innerHTML)
-            $("#log_content").append("<span style='color: red;'>来自远方的消息： </span>");
-            $("#log_content").append("<span> "+innerHTML +"</span>").append("<br/>");
+
+            var str = "<div>" + "<span style='color: red;'>来自远方的消息： </span>" + "<span> "+innerHTML +"</span>" +"<br/>" +"</div>"
+            $("#log_content").append(str)
+
             $("#log_content").scrollTop($("#log_content").height() - $("#log-container").height());
 
+            var lenth = $("#log_content").children().length;
+            if (lenth >max_logs){
+                $("#log_content").children().first().remove()
+            }
 
             return
         }
@@ -264,7 +271,7 @@
         }
 
 
-        var str = "<div>" + "<div> ------ " + content.level + " : " + content.timestamp + " ------ </div>" + "<br/>"
+        var str = "<div>" + "<div> ------ " + content.level + " : " + content.timestamp + " ------ </div>"
             + "<div>" + content.body +"</div>" +"<br/>" + "</div>"
 
         $("#log_content").append(str)
@@ -272,20 +279,19 @@
 
         $("#log-container").scrollTop($("#log_content").height() - $("#log-container").height());
         // $("#log-container div").removeChild( $("#log-container div").firstChild());
-
         var lenth = $("#log_content").children().length;
-        alert(lenth)
-
-        while (lenth >30){
+        if (lenth >max_logs){
             $("#log_content").children().first().remove()
         }
 
+        lengthClear()
         number++;
         if (number >= 100) {
             number = 0;
            // document.getElementById('message').innerHTML = '<br/>';
         }
     }
+
 
 
 </script>
