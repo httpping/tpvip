@@ -49,6 +49,7 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
                 int avg = (tbLog.getFeeTime() + result.getFeeTime())/2;
                 tbLog.setFeeTime(avg);
             }
+            tbLog.setVisitsNumber(result.getVisitsNumber() +1 );
         }
         insertOrUpdate(tbLog);
        return tbLog;

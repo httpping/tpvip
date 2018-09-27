@@ -41,9 +41,9 @@
     <thead class="thead-dark">
     <tr>
         <th scope="col">#</th>
-        <th scope="col" style="width: 45%">Url</th>
+        <th scope="col" style="width: 45%; max-width: 50%">Url</th>
         <th scope="col">Platform</th>
-        <th scope="col">FeeTime(ms)</th>
+        <th scope="col">FeeTime(ms/N)</th>
         <th scope="col">UpdateTime</th>
         <th scope="col">Option</th>
     </tr>
@@ -52,13 +52,13 @@
 
     <tr th:each="log ,logStat: ${logs}" onclick="goNext(${log.id})">
         <th scope="row" th:text="${logStat.index + 1}"></th>
-        <td th:text="${log.url}"></td>
+        <td th:text="${log.url}" style="width: 45%"></td>
         <td th:text="${log.domain}"></td>
-        <td th:text="${log.feeTime}"></td>
+        <td th:text="${log.feeTime + '/' + log.visitsNumber}"></td>
         <td th:text="${#dates.format(log.updateTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
         <td ><a th:href="${ '/api/delete/' + log.id}" class="btn btn-light btn-sm" >删除</a> &nbsp;&nbsp;<a th:href="${ '/api/show/' + log.id}"  class="btn btn-info btn-sm">查看</a>
-            &nbsp;&nbsp;  <a th:href="${ '/api/model/' + log.id}"  class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="快速模拟会帮你根据现在的接口内容生成模拟接口数据   ">一键建模</a>
-            &nbsp;&nbsp; <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.ticket} + ')'" th:class="${log.ticket == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'" th:text="${log.ticket == 1 ?'已锁定':'未锁定'}" data-toggle="tooltip" data-placement="top" title="锁定状态，不会更新接口数据内容"></button>
+            &nbsp;&nbsp;  <a th:href="${ '/api/model/' + log.id}"  class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="快速模拟会帮你根据现在的接口内容生成模拟接口数据   ">一键建模</a>&nbsp;&nbsp; <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.ticket} + ')'" th:class="${log.ticket == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'" th:text="${log.ticket == 1 ?'已锁定':'未锁定'}" data-toggle="tooltip" data-placement="top" title="锁定状态，不会更新接口数据内容"></button>
+
 
         </td>
     </tr>

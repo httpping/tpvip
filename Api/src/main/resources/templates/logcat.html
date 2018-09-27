@@ -30,8 +30,8 @@
 <button onclick="modelControler()">接口模拟</button>
 
 
-&nbsp;&nbsp;&nbsp; 用户过滤id:<input type="text" id="user_id" value="" onchange="userIdChange()"/>
-<input type="checkbox" id="android" checked="checked" onchange="levelChange()"> android </input> &nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;<!-- 用户过滤id:--><input type="hidden" id="user_id" value="" onchange="userIdChange()"/>
+<input type="checkbox" id="android" onchange="levelChange()"> android </input> &nbsp;&nbsp;
 <input type="checkbox" id="ios" onchange="levelChange()">ios</input>
 &nbsp;&nbsp;&nbsp; 平台过滤:<input type="text" id="platform_name" onchange="plfatformChange()"/>
 &nbsp;&nbsp;&nbsp; 关键字过滤:<input type="text" id="url_path" value="" onchange="urlChange()"/>
@@ -208,7 +208,6 @@
 
     //将消息显示在网页上
     function setMessageInnerHTML(innerHTML) {
-
         var content
         try {
             content = JSON.parse(innerHTML);
@@ -252,9 +251,9 @@
         // alert(ios +" -" + android )
         var user_id_val = $("#user_id").val(); //获取
         if (!isNull(user_id_val)) {
-            if (user_id_val != content.userId) {
+            /*if (user_id_val != content.userId) {
                 return;
-            }
+            }*/
         }
 
         var platform_name = $("#platform_name").val(); //获取
@@ -263,11 +262,17 @@
                 return;
             }
         }
+
         var url_path = sessionStorage.getItem("url_path");
         if (!isNull(url_path)) {
             if (content.body.toLowerCase().indexOf(url_path.toLowerCase()) < 0) {
                 return;
             }
+
+        }
+        //过滤掉.google链接
+        if (content.url !=null && content.url.toLowerCase().indexOf('\.google')>0) {
+            return
         }
 
 
@@ -284,14 +289,12 @@
             $("#log_content").children().first().remove()
         }
 
-        lengthClear()
         number++;
         if (number >= 100) {
             number = 0;
            // document.getElementById('message').innerHTML = '<br/>';
         }
     }
-
 
 
 </script>

@@ -67,6 +67,10 @@ public class TbLog extends Model<TbLog> {
      */
     private int ticket;
 
+    /**
+     * 访问次数
+     */
+    private int visitsNumber;
 
     @Override
     protected Serializable pkVal() {

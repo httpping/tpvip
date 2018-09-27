@@ -74,12 +74,13 @@
         }
     </style>
 </head>
-<body>
+<body style="width: 100%">
 <header th:include="/common::header"></header>
 
 <hr/>
-
-<div id="log-container" style="height: 880px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+&nbsp;&nbsp; <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.ticket} + ')'" th:class="${log.ticket == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'" th:text="${log.ticket == 1 ?'已锁定':'未锁定'}" data-toggle="tooltip" data-placement="top" title="锁定状态，不会更新接口数据内容"></button>
+<br/>
+<div id="log-container" style="height: 830px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
     <div id="content">
 
         <span class="color:red">请求地址:</span> <br/>  <span th:text="${log.url}"></span>
@@ -96,10 +97,44 @@
 <script th:inline="javascript">
     var message = [[${log.response}]];
     //console.log(message);
-    $('#response').JSONView(message);
+    try {
+        $('#response').JSONView(message);
+    }catch(err)  {
+        $('#response').append(message);
+    }
 
-    $('#request').JSONView([[${log.request}]]);
+    try {
+        $('#request').JSONView([[${log.request}]])
+    }catch (err){
+        $('#request').append([[${log.request}]])
+    }
+
+
+    function ticket(id,ticket) {
+
+        if (ticket == 0){
+            ticket = 1
+        }else{
+            ticket = 0
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/ticket",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({id:id,ticket:ticket}),
+            dataType: "json",
+            success: function (message) {
+                window.location.reload()
+
+            },
+            error: function (message) {
+            }
+        });
+    }
+
 </script>
+
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
