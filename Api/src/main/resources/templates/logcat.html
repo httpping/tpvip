@@ -14,10 +14,13 @@
             color: red;
         }
 
+        body{height:100%}
+
+
     </style>
 
 </head>
-<body>
+<body style="height: 100%;">
 <button onclick="openSocket()">开启日志</button>
 <button onclick="closeWebSocket()">关闭日志</button> &nbsp;&nbsp;
 <button onclick="clearLog()">清除日志</button>
@@ -35,8 +38,8 @@
 &nbsp; <input id="text" type="text" placeholder="匿名勾搭" onkeydown="send()"/>
 </div>
 <hr/>
-<div id="log-container" style="height: 880px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
-    <div></div>
+<div id="log-container" style="height: 880px; width: 99%;  overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+    <div id="log_content"></div>
 </div>
 <script>
     $(document).ready(function () {
@@ -211,9 +214,11 @@
         }
         catch (err) {
             // alert(innerHTML)
-            $("#log-container div").append("<span style='color: red;'>来自远方的消息： </span>");
-            $("#log-container div").append(innerHTML).append("<br/>");
-            $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+            $("#log_content").append("<span style='color: red;'>来自远方的消息： </span>");
+            $("#log_content").append("<span> "+innerHTML +"</span>").append("<br/>");
+            $("#log_content").scrollTop($("#log_content").height() - $("#log-container").height());
+
+
             return
         }
 
@@ -258,14 +263,27 @@
             }
         }
 
-        $("#log-container div").append(" ------ " + content.level + " : " + content.timestamp + " ------ ").append("<br/>");
-        $("#log-container div").append(content.body).append("<br/>");
-        $("#log-container").scrollTop($("#log-container div").height() - $("#log-container").height());
+
+        var str = "<div>" + "<div> ------ " + content.level + " : " + content.timestamp + " ------ </div>" + "<br/>"
+            + "<div>" + content.body +"</div>" +"<br/>" + "</div>"
+
+        $("#log_content").append(str)
+
+
+        $("#log-container").scrollTop($("#log_content").height() - $("#log-container").height());
+        // $("#log-container div").removeChild( $("#log-container div").firstChild());
+
+        var lenth = $("#log_content").children().length;
+        alert(lenth)
+
+        while (lenth >30){
+            $("#log_content").children().first().remove()
+        }
 
         number++;
         if (number >= 100) {
             number = 0;
-            document.getElementById('message').innerHTML = '<br/>';
+           // document.getElementById('message').innerHTML = '<br/>';
         }
     }
 
