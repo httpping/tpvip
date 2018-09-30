@@ -3,15 +3,28 @@
 <head>
     <meta charset="utf-8"/>
     <title>WebSocket Logger</title>
-    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>
-    <script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>
-    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>
+    <!--<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>-->
     <!-- Bootstrap -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
 
     <style>
 
         a {
             color: red;
+        }
+
+        hr{
+            background-color: snow;
         }
 
         body{height:100%}
@@ -20,25 +33,45 @@
     </style>
 
 </head>
-<body style="height: 100%;">
-<button onclick="openSocket()">开启日志</button>
-<button onclick="closeWebSocket()">关闭日志</button> &nbsp;&nbsp;
-<button onclick="clearLog()">清除日志</button>
-<button onclick="openOld()" style="color: blue;">历史日志(new)</button>
-<button onclick="openApi()">API 接入</button>
-<button onclick="druidControler()">性能监控</button>
-<button onclick="modelControler()">接口模拟</button>
+<body style="height: 100%;"  >
+<div style="margin: 10px 10px 10px 20px;" class="form-row align-items-center">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button onclick="openSocket()" type="button" class="btn btn-outline-secondary">开启日志</button>
+            <button onclick="closeWebSocket()" type="button" class="btn btn-outline-secondary">关闭日志</button>
+            <button onclick="clearLog()" type="button" class="btn btn-outline-secondary">清除日志</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
 
+            <button onclick="openOld()" type="button" class="btn btn-outline-success">历史日志</button>
+            <button onclick="modelControler()" type="button" class="btn btn-outline-success">接口模拟</button>
+        </div>
+        <div class="btn-group" role="group" aria-label="Third group">
+
+            <button onclick="openApi()" type="button" class="btn btn-outline-dark">API 接入</button>
+            <button onclick="druidControler()" type="button" class="btn btn-outline-dark">性能监控</button>
+        </div>
+    </div>
 
 &nbsp;&nbsp;&nbsp;<!-- 用户过滤id:--><input type="hidden" id="user_id" value="" onchange="userIdChange()"/>
-<input type="checkbox" id="android" onchange="levelChange()"> android </input> &nbsp;&nbsp;
-<input type="checkbox" id="ios" onchange="levelChange()">ios</input>
-&nbsp;&nbsp;&nbsp; 平台过滤:<input type="text" id="platform_name" onchange="plfatformChange()"/>
-&nbsp;&nbsp;&nbsp; 关键字过滤:<input type="text" id="url_path" value="" onchange="urlChange()"/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+<div class="col-auto my-1">
+    <select class="custom-select mr-sm-2" id="cur_system" onchange="levelChange()">
+        <option value="0">Choose...</option>
+        <option value="1">Android</option>
+        <option value="2">iOS</option>
+
+    </select>
+</div>
+<!--<input type="checkbox" id="android" onchange="levelChange()" > Android </input> &nbsp;&nbsp;-->
+<!--<input type="checkbox" id="ios" onchange="levelChange()">iOS</input>-->
+&nbsp;&nbsp; <input type="text" id="platform_name" onchange="plfatformChange()"  placeholder="平台过滤"/>
+&nbsp;&nbsp; <input type="text" id="url_path" value="" onchange="urlChange()" placeholder="关键字过滤"/>
 &nbsp; <input id="text" type="text" placeholder="匿名勾搭" onkeydown="send()"/>
 </div>
-<hr/>
-<div id="log-container" style="height: 880px; width: 99%;  overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+<!--<hr/>-->
+<div id="log-container" style="height: 870px; width: 99%;  overflow-y: scroll; background: #333; color: #aaa; padding: 12px;">
     <div id="log_content"></div>
 </div>
 <script>
@@ -46,7 +79,7 @@
         openSocket();
     });
 
-    $("#android").ready(function () {
+    $("#cur_system").ready(function () {
         //通过key来获取value
         var dt = sessionStorage.getItem("user_id");
         $("#user_id").val(dt);
@@ -54,21 +87,21 @@
         var platform = sessionStorage.getItem("platform_name");
         $("#platform_name").val(platform);
 
-        // if (isNull(platform)){
-        //     $("#platform_name").val("DL");
-        // }
 
         var url_path = sessionStorage.getItem("url_path");
         $("#url_path").val(url_path);
 
-        var ios = sessionStorage.getItem("level_ios")
-        var android = sessionStorage.getItem("level_android")
-        if (ios == 'true') {
-            $('#ios').prop('checked', true);
+
+        var level = sessionStorage.getItem("level")
+        if (level == null){
+            level = 0;
         }
-        if (android == 'true') {
-            $('#android').prop('checked', true);
-        }
+        $("#cur_system").prop("value",level);
+
+        // $("cur_system").val(level)
+        // $("cur_system").options[level].selected = true;
+        // alert(level)
+
     });
 
 
@@ -102,6 +135,8 @@
         //连接成功建立的回调方法
         websocket.onopen = function (event) {
             setMessageInnerHTML("连接成功了...");
+
+
         }
 
         //接收到消息的回调方法
@@ -168,16 +203,11 @@
 
 
     function levelChange() {
-        var user_id_val = $("#user_id").val(); //获取
-        //添加key-value 数据到 sessionStorage
-        sessionStorage.setItem("user_id", user_id_val);
 
+        var curSys = $("#cur_system").val();
+        // alert(curSys)
+        sessionStorage.setItem("level",curSys);
 
-        var ios = $('#ios').is(":checked");
-        var android = $('#android').is(":checked");
-
-        sessionStorage.setItem("level_ios", ios);
-        sessionStorage.setItem("level_android", android);
     }
 
     function openOld() {
@@ -232,22 +262,20 @@
         var ios = $('#ios').is(":checked");
         var android = $('#android').is(":checked");
 
-
-        if (ios && android) {
-            //todo
-        } else {
-            if (ios) {
+        var level =  $("#cur_system").val();
+        if (level != 0){
+            if (level == 2) {
                 if (content.level.toLowerCase().indexOf("ios") < 0) {
                     return;
                 }
             }
-            if (android) {
+            if (level == 1) {
                 if (content.level.toLowerCase().indexOf("android") < 0) {
                     return;
                 }
             }
-
         }
+
         // alert(ios +" -" + android )
         var user_id_val = $("#user_id").val(); //获取
         if (!isNull(user_id_val)) {
