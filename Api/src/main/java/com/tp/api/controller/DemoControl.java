@@ -4,15 +4,13 @@ package com.tp.api.controller;
 import com.tp.api.config.websocket2.MyWebSocket;
 import com.tp.api.constant.ReturnCodeEnum;
 import com.tp.api.utils.ServerUtils;
-import com.tp.common.bean.BaseResult;
+import com.tp.common.bean.BaseResponse;
 import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -28,9 +26,9 @@ public class DemoControl {
     private MessageSource messageSource;
 
     @RequestMapping("/hello")
-    public BaseResult sayHello() throws NotFoundException {
+    public BaseResponse sayHello() throws NotFoundException {
         log.info("hello world!");
-        BaseResult baseResult = new BaseResult();
+        BaseResponse baseResult = new BaseResponse();
         baseResult.data = "hello word";
         String msg1 = this.messageSource.getMessage("message.order.stockout", null, Locale.CHINA);
 

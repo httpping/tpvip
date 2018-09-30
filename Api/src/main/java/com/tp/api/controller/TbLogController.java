@@ -3,13 +3,11 @@ package com.tp.api.controller;
 
 import com.tp.api.entity.ApiModel;
 import com.tp.api.entity.TbLog;
-import com.tp.api.mode.LogRequest;
 import com.tp.api.mode.LoggerMessage;
 import com.tp.api.service.ApiModelService;
 import com.tp.api.service.TbLogService;
-import com.tp.common.bean.BaseResult;
+import com.tp.common.bean.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.PortableInterceptor.SUCCESSFUL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +17,7 @@ import org.springframework.stereotype.Controller;
 import java.net.URI;
 import java.util.List;
 
-import static com.tp.common.bean.BaseResult.SUCCESS;
+import static com.tp.common.bean.BaseResponse.SUCCESS;
 
 /**
  * <p>
@@ -66,10 +64,10 @@ public class TbLogController {
 
     @PostMapping("/ticket")
     @ResponseBody
-    public BaseResult thicket(@RequestBody TbLog request){
+    public BaseResponse thicket(@RequestBody TbLog request){
         log.info("thicket" + request);
         tbLogService.ticket(request);
-        return BaseResult.created(SUCCESS,"message.common.success");
+        return BaseResponse.created(SUCCESS,"message.common.success");
     }
 
 

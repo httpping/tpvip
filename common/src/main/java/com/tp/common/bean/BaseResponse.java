@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BaseResult<T>  {
+public class BaseResponse<T>  {
 
 
     public static  final int SUCCESS = 200;
@@ -21,8 +21,8 @@ public class BaseResult<T>  {
     public T data;
 
 
-    public  static <T> BaseResult created(int code ,String message,T data){
-        BaseResult result = new BaseResult();
+    public  static <T> BaseResponse created(int code , String message, T data){
+        BaseResponse result = new BaseResponse();
         result.code = code;
         result.message = message;
         result.data = data;
@@ -30,8 +30,8 @@ public class BaseResult<T>  {
     }
 
 
-    public  static <T> BaseResult created(int code ,String message){
-        BaseResult result = new BaseResult();
+    public  static <T> BaseResponse created(int code , String message){
+        BaseResponse result = new BaseResponse();
         result.code = code;
         result.message = message;
         return  result;
