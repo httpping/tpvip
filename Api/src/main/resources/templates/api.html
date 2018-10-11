@@ -25,9 +25,9 @@
 <div style="margin: 20px">
 <div class="input-group mb-3" style="width:95%">
 
-    <input  th:value="${url}" id="platform_url" type="text" class="form-control" placeholder="过滤Url" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <input  th:value="${url}" id="platform_url" type="text" class="form-control" placeholder="过滤Url" aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
     &nbsp;&nbsp;&nbsp;
-    <input  th:value="${domain}" id="platform_name" type="text" class="form-control" placeholder="过滤平台" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    <input  th:value="${domain}" id="platform_name" type="text" class="form-control" placeholder="过滤平台" aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
 
     &nbsp;&nbsp;&nbsp;
     <div class="input-group-append">
@@ -120,9 +120,15 @@
     }
 
     function search() {
-        var domain = $('#platform_name').val();
-        var url = $('#platform_url').val();
-        window.location.href ='/api?domain='+domain +'&url='+url;
+        var domain = $('#platform_name').val().trim();
+        var url = $('#platform_url').val().trim();
+        window.location.href = '/api?domain=' + domain + '&url=' + url;
+    }
+
+    function filterEvent() {
+        if (event.keyCode == "13") {
+            search()
+        }
     }
 
 </script>
