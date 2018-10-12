@@ -39,6 +39,16 @@ public class TbStringServiceImpl extends ServiceImpl<TbStringMapper, TbString> i
         insertOrUpdate(tbString);
 
 
-        return null;
+        return tbString;
+    }
+
+    @Override
+    public boolean saveOrUpdateList(List<TbString> tbStrings) {
+
+        for (TbString tb : tbStrings) {
+             saveOrUpdate(tb);
+        }
+
+        return true;
     }
 }

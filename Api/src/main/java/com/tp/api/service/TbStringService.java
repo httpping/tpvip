@@ -4,6 +4,7 @@ import com.tp.api.entity.TbString;
 import com.baomidou.mybatisplus.service.IService;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +18,7 @@ public interface TbStringService extends IService<TbString> {
 
 
     TbString saveOrUpdate(TbString tbString);
+
+    boolean saveOrUpdateList(List<TbString> tbStrings);
 
 }

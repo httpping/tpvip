@@ -2,6 +2,7 @@ package com.tp.api.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.baomidou.mybatisplus.annotations.TableField;
+import com.baomidou.mybatisplus.annotations.TableLogic;
 import lombok.Data;
 
 import java.beans.Transient;
@@ -46,7 +47,25 @@ public class TbString extends Model<TbString> {
      */
     private String valueTw;
 
+    /**
+     * 德语
+     */
+    private String valueDe;
 
+
+    /**
+     * 印度尼西亚语
+     */
+    private String valueId;
+
+
+
+    private String domain = "zaful";
+
+    /**
+     * 1 删除
+     */
+    private Integer flag ;
 /*
     @TableField(exist = false)
     private String lang;*/

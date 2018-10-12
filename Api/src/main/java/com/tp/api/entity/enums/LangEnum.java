@@ -12,6 +12,7 @@ public enum LangEnum implements IEnum {
     EN("en", "英语"),
     ES("es", "西班牙"),
     AR("ar", "沙特阿拉伯"),
+    DE("de","德语"),
     FR("fr", "法语");
 
     private String value;
@@ -31,4 +32,6 @@ public enum LangEnum implements IEnum {
     public String getDesc(){
         return this.desc;
     }
+
+
 }

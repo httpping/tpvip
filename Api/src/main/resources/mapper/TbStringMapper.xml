@@ -14,11 +14,17 @@
         <result column="value_fr" property="valueFr" />
         <result column="value_es" property="valueEs" />
         <result column="value_tw" property="valueTw" />
+        <result column="value_de" property="valueDe" />
+        <result column="value_id" property="valueId" />
+
+        <result column="domain" property="domain" />
+        <result column="flag" property="flag" />
+
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        name, value_en, value_ar, value_fr, value_es, value_tw
+        name, value_en, value_ar, value_fr, value_es, value_tw,value_de,value_id,domain,flag
     </sql>
 
 </mapper>
