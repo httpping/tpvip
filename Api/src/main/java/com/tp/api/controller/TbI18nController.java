@@ -3,10 +3,13 @@ package com.tp.api.controller;
 
 import com.tp.api.entity.ApiModel;
 import com.tp.api.entity.TbLog;
+import com.tp.api.entity.TbString;
 import com.tp.api.fileupload.Progress;
 import com.tp.api.mode.LoggerMessage;
+import com.tp.api.mode.StringFilterRequestParam;
 import com.tp.api.service.ApiModelService;
 import com.tp.api.service.TbLogService;
+import com.tp.api.service.TbStringService;
 import com.tp.common.bean.BaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,24 +41,35 @@ import static com.tp.common.bean.BaseResponse.SUCCESS;
 @RequestMapping("/string")
 public class TbI18nController {
 
+    @Autowired
+    TbStringService tbStringService;
 
     @GetMapping
-    public String index(Model model,TbLog request){
-        model.addAttribute("headerTitle","Api 历史记录");
+    public String index(Model model,StringFilterRequestParam param){
+
+        List<TbString> tbStrings =  tbStringService.select(param);
+
+        model.addAttribute("headerTitle","Zaful Android APP国际化数据表");
+//        model.addAttribute("domain",request.getDomain());
+        model.addAttribute("logs",tbStrings);
+
         return "/string/index";
     }
 
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public @ResponseBody String up(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws  IOException {
+        String targetPath = null;
         if (!file.isEmpty()){
             File rootPath = new File(ResourceUtils.getURL("classpath:").getPath());
 
-            String path = "/upload/";
+            String path = rootPath + "/upload/";
+            new File(path).mkdirs();
             String fileName = file.getName();
             File target = new File(path + fileName);
             file.transferTo(target);
+            targetPath = target.getPath();
         }
-        return "upload success";
+        return "upload success :" +targetPath ;
     }
 
 

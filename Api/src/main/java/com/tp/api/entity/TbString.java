@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.beans.Transient;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -66,6 +67,16 @@ public class TbString extends Model<TbString> {
      * 1 删除
      */
     private Integer flag ;
+
+
+
+    private String appVersion ;
+    private Date updateTime;
+
+    private Integer version;
+
+    private Integer ticket;
+
 /*
     @TableField(exist = false)
     private String lang;*/
@@ -73,7 +84,7 @@ public class TbString extends Model<TbString> {
 
     @Override
     protected Serializable pkVal() {
-        return this.name;
+        return this.id;
     }
 
 }

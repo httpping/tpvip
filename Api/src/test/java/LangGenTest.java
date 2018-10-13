@@ -27,7 +27,7 @@
 //public class LangGenTest {
 //
 //
-//    public static final String rootPath ;
+//    public static final String rootPath = "C:\\work\\zf\\\\app\\build\\intermediates\\incremental\\mergeGoogleDebugResources\\merged.dir\\";
 //
 //
 //    @Autowired

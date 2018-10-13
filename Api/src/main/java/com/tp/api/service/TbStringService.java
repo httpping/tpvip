@@ -2,6 +2,7 @@ package com.tp.api.service;
 
 import com.tp.api.entity.TbString;
 import com.baomidou.mybatisplus.service.IService;
+import com.tp.api.mode.StringFilterRequestParam;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,6 +19,9 @@ public interface TbStringService extends IService<TbString> {
 
 
     TbString saveOrUpdate(TbString tbString);
+
+
+    List<TbString> select(StringFilterRequestParam param);
 
     boolean saveOrUpdateList(List<TbString> tbStrings);
 
