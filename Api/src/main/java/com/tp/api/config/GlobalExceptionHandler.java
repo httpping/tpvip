@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
 	}
 
 
-	@ExceptionHandler
+	@ExceptionHandler(Exception.class)
 	public BaseResponse processException(Exception ex, HttpServletRequest request, HttpServletResponse response){
 		ex.printStackTrace();
 		

@@ -102,3 +102,5 @@ mybatis-plus:
     cache-enabled: false
 
 
+vip:
+  uploadPath: /home/longxl/jar/upload/

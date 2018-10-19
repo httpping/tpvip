@@ -1,6 +1,8 @@
 package com.tp.api.service.impl;
 
 import com.baomidou.mybatisplus.mapper.Condition;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.tp.api.entity.TbLog;
 import com.tp.api.entity.TbString;
@@ -33,12 +35,16 @@ public class TbStringServiceImpl extends ServiceImpl<TbStringMapper, TbString> i
         if (!StringUtils.isEmpty(tbString.getName())) {
             condition.where("name = {0}", tbString.getName());
         }
+        if (!StringUtils.isEmpty(tbString.getDomain())) {
+            condition.and("domain = {0}", tbString.getDomain());
+        }
         List<TbString> tbStrings = baseMapper.selectList(condition);
 
         if (tbStrings !=null && tbStrings.size() == 1){
             TbString result =  tbStrings.get(0);
             tbString.setId(result.getId());
             tbString.setVersion(result.getVersion() + 1);
+            tbString.setAppVersion(result.getAppVersion());
         }
 
         //最新加入的放前面
@@ -49,21 +55,47 @@ public class TbStringServiceImpl extends ServiceImpl<TbStringMapper, TbString> i
     }
 
     @Override
-    public List<TbString> select(StringFilterRequestParam request) {
+    public Page<TbString> select(StringFilterRequestParam request) {
 
-        Condition condition =  Condition.create();
+        EntityWrapper condition =  new EntityWrapper();
         if (!StringUtils.isEmpty(request.getDomain())) {
             condition.where("domain = {0}", request.getDomain());
         }
         if (!StringUtils.isEmpty(request.getAppVersion())) {
             condition.where("app_version = {0}", request.getAppVersion());
         }
+        if (!StringUtils.isEmpty(request.getFlag())) {
+            condition.where("flag = {0}", request.getFlag());
+        }
 
+        if (!StringUtils.isEmpty(request.getSort())) {
+
+            if ("asc".equals(request.getOrder())) {
+                condition.orderBy(request.getSort(),true);
+            }else {
+                condition.orderBy(request.getSort(),false);
+            }
+        }
         condition.orderBy("version");
 
-        List<TbString> tbStrings = baseMapper.selectList(condition);
-        return tbStrings;
+        Page page = new Page<TbString>(request.getOffset()/request.getLimit(), request.getLimit());
 
+        EntityWrapper<StringFilterRequestParam> entityWrapper = new EntityWrapper<>();
+
+        List<TbString> tbStrings = baseMapper.selectPage(page,condition);
+        page.setRecords(tbStrings);
+        return page;
+
+    }
+
+    @Override
+    public List<TbString> groupBy(String name) {
+
+        Condition condition =  Condition.create();
+        condition.groupBy(name);
+        List<TbString> groups = baseMapper.selectList(condition);
+
+        return groups;
     }
 
     @Override

@@ -71,7 +71,7 @@ public class TbString extends Model<TbString> {
 
 
     private String appVersion ;
-    private Date updateTime;
+    private Date updateTime = new Date();
 
     private Integer version;
 

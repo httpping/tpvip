@@ -26,60 +26,94 @@
 
 <div style="margin: 20px">
 
-    <form id="search" name="search" method="get" action="/string">
-    <div class="input-group mb-3" style="width:95%">
+    <div id="=toolbar" class="input-group mb-3" style="width:95%">
 
-        <input th:value="${param.domain}" id="domain" name="domain" type="text" class="form-control" placeholder="过滤domain"
+      <!--  <input th:value="${param.domain}" id="domain" name="domain" type="text" class="form-control" placeholder="过滤domain"
                aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
-        &nbsp;&nbsp;&nbsp;
-        <input th:value="${param.appVersion}" id="appVersion" name="appVersion" type="text" class="form-control" placeholder="过滤App版本"
-               aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
+        &nbsp;&nbsp;&nbsp;-->
+        <!--<input th:value="${param.appVersion}" id="appVersion" name="appVersion" type="text" class="form-control" placeholder="过滤App版本"
+               aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">-->
+    <div class="col-auto my-1">
+        <select class="custom-select mr-sm-2" id="domain" name="domain" onchange="levelChange()">
+            <option value="">Choose Domain...</option>
+        </select>
+    </div>
 
+        <div class="col-auto my-1">
+            <select class="custom-select mr-sm-2" id="appVersion" name="appVersion" onchange="levelChange()">
+                <option value="">Choose Version...</option>
+            </select>
+        </div>
+
+        <div class="col-auto my-1">
+            <select class="custom-select mr-sm-2" id="flag" name="flag" onchange="levelChange()">
+                <option value="">Choose 是否需要翻译...</option>
+                <option value="0">需要翻译</option>
+                <option value="1">不需要翻译</option>
+            </select>
+        </div>
         &nbsp;&nbsp;&nbsp;
         <div class="input-group-append">
-            <button   class="btn btn-outline-secondary" type="submit">搜索</button>
+            <button   class="btn  btn-outline-primary" type="button"  onclick="reLoad()">搜索</button>
         </div>
     </div>
-    </form>
-    <div >
-        <table class="table table-sm table-hover"  style="table-layout:fixed">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col" style="width: 3%">#</th>
-                <th scope="col">Key</th>
-                <th scope="col">En</th>
-                <th scope="col">Es</th>
-                <th scope="col">Ar</th>
-                <th scope="col">Fr</th>
-                <th scope="col">De</th>
-                <th scope="col" style="width: 5%">Option</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="log ,logStat: ${logs}" onclick="goNext(${log.id})">
-                <th scope="row" th:text="${logStat.index + 1}"></th>
-                <td th:text="${log.name}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" ></td>
-                <td th:text="${log.valueEn}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
-                <td th:text="${log.valueEs}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
-                <td th:text="${log.valueAr}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
-                <td th:text="${log.valueFr}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
-                <td th:text="${log.valueDe}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
-                <td>
-                    <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.flag} + ')'"
-                            th:class="${log.flag == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'"
-                            th:text="${log.flag == 1 ?'不翻译':'需翻译'}" data-toggle="tooltip" data-placement="top"
-                            title="锁定状态，不会更新接口数据内容"></button>
+    <table id="exampleTable" class="table table-hover"
+           data-toolbar="#toolbar"
+           data-show-refresh="true"
+           data-show-toggle="true"
+           data-show-columns="true"
+           data-show-export="true"
+           data-minimum-count-columns="2"
+           data-show-pagination-switch="true"
+           data-pagination="true"
+           data-page-list="[10,20, 25, 50, 100,2000]"
+           data-side-pagination="server"
+           data-url="/string/list"
 
-                </td>
-            </tr>
-
-            </tbody>
-        </table>
-    </div>
+    ></table>
 
 </div>
 
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.css">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/bootstrap-table.min.js"></script>
+
+<!-- Latest compiled and minified Locales -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.12.1/locale/bootstrap-table-zh-CN.min.js"></script>
+
+<script src="//cdn.bootcss.com/bootstrap-table/1.11.0/bootstrap-table-locale-all.js"></script>
+<script src="//cdn.bootcss.com/bootstrap-table/1.11.0/extensions/export/bootstrap-table-export.min.js"></script>
+<!-- bootstrap table 包含excel导出，pdf导出 -->
+<script src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script src="//cdn.bootcss.com/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+
+
+
+<script type="text/javascript" src="/static/js/string/index.js"></script>
+
+
+<script th:inline="javascript">
+    var appVersions  = [[${appVersions}]];
+    for ( var i = 0; i < appVersions.length; i++) {
+        if (appVersions[i].appVersion !=null) {
+            $("#appVersion").append("<option value='" + appVersions[i].appVersion + "'>" + appVersions[i].appVersion + "</option>");
+        }
+    }
+
+    var domains  = [[${domains}]];
+    for ( var i = 0; i < domains.length; i++) {
+        if (domains[i].domain !=null) {
+            $("#domain").append("<option value='" + domains[i].domain + "'>" + domains[i].domain + "</option>");
+        }
+    }
+</script>
+
 <script type="text/javascript">
+    function levelChange() {
+        reLoad()
+    }
 
 
 </script>

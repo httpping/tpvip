@@ -1,3 +1,4 @@
+/*
 package com.tp.api.config.websocket;
 
 import org.springframework.context.annotation.Configuration;
@@ -30,11 +31,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
-              /*  .allowedOrigins("*")
+              */
+/*  .allowedOrigins("*")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "DELETE", "PUT")
-                .maxAge(3600);*/
+                .maxAge(3600);*//*
+
     }
 
 
 }
+*/

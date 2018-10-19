@@ -1,5 +1,6 @@
 package com.tp.api.service;
 
+import com.baomidou.mybatisplus.plugins.Page;
 import com.tp.api.entity.TbString;
 import com.baomidou.mybatisplus.service.IService;
 import com.tp.api.mode.StringFilterRequestParam;
@@ -21,7 +22,10 @@ public interface TbStringService extends IService<TbString> {
     TbString saveOrUpdate(TbString tbString);
 
 
-    List<TbString> select(StringFilterRequestParam param);
+    Page<TbString> select(StringFilterRequestParam param);
+
+
+    List<TbString> groupBy(String name);
 
     boolean saveOrUpdateList(List<TbString> tbStrings);
 

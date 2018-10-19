@@ -71,11 +71,13 @@
             font-size: 1.2em; }
         a{
             color:#AE8ABE;
+            target: '_blank';
         }
     </style>
 </head>
 <body style="width: 100%">
 <header th:include="/common::header"></header>
+<script type="text/javascript" src="https://rawgithub.com/yesmeck/jquery-jsonview/master/dist/jquery.jsonview.js"></script>
 
 <hr/>
 &nbsp;&nbsp; <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.ticket} + ')'" th:class="${log.ticket == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'" th:text="${log.ticket == 1 ?'已锁定':'未锁定'}" data-toggle="tooltip" data-placement="top" title="锁定状态，不会更新接口数据内容"></button>

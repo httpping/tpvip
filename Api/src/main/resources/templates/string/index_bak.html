@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <title>移动组的日志系统</title>
+
+</head>
+<body>
+<header th:include="/common::header"></header>
+
+<!--<form id="fileForm" name="fileForm" enctype="multipart/form-data" action="string/upload" method="post">-->
+<!--<input class="form-control" type="file" name="file" id="file"/>-->
+<!--<button id="btn" type="submit">提交</button>-->
+<!--</form>-->
+<!--<div class="progress">-->
+<!--<div id="progress" class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 1%;">-->
+<!--0%-->
+<!--</div>-->
+<!--</div>-->
+
+<div style="margin: 20px">
+
+    <form id="search" name="search" method="get" action="/string">
+    <div class="input-group mb-3" style="width:95%">
+
+        <input th:value="${param.domain}" id="domain" name="domain" type="text" class="form-control" placeholder="过滤domain"
+               aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
+        &nbsp;&nbsp;&nbsp;
+        <input th:value="${param.appVersion}" id="appVersion" name="appVersion" type="text" class="form-control" placeholder="过滤App版本"
+               aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
+
+        &nbsp;&nbsp;&nbsp;
+        <div class="input-group-append">
+            <button   class="btn btn-outline-secondary" type="submit">搜索</button>
+        </div>
+    </div>
+    </form>
+    <div >
+        <table class="table table-sm table-hover"  style="table-layout:fixed">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col" style="width: 3%">#</th>
+                <th scope="col">Key</th>
+                <th scope="col">En</th>
+                <th scope="col">Es</th>
+                <th scope="col">Ar</th>
+                <th scope="col">Fr</th>
+                <th scope="col">De</th>
+                <th scope="col" style="width: 5%">Option</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="log ,logStat: ${logs}" onclick="goNext(${log.id})">
+                <th scope="row" th:text="${logStat.index + 1}"></th>
+                <td th:text="${log.name}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" ></td>
+                <td th:text="${log.valueEn}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
+                <td th:text="${log.valueEs}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
+                <td th:text="${log.valueAr}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
+                <td th:text="${log.valueFr}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
+                <td th:text="${log.valueDe}" style="overflow:hidden;white-space:nowrap;text-overflow:ellipsis;"></td>
+                <td>
+                    <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.flag} + ')'"
+                            th:class="${log.flag == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'"
+                            th:text="${log.flag == 1 ?'不翻译':'需翻译'}" data-toggle="tooltip" data-placement="top"
+                            title="锁定状态，不会更新接口数据内容"></button>
+
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+
+
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>
+<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+-->
+
+<script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="150"
+        src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+
+
+</body>
+</html>
+

@@ -10,5 +10,12 @@ public class StringFilterRequestParam {
     public Integer flag ;
     public Integer version ;
 
+    private String order;
+    private String sort;
+    private int offset;
+    private int limit ;
+
+    private String lang;
+
     public String appVersion ;
 }

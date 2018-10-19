@@ -25,7 +25,7 @@ public class Application {
 
 
 
-    @Bean(name = "multipartResolver")
+//    @Bean(name = "multipartResolver")
     public MultipartResolver multipartResolver()
     {
         return new CustomMultipartResolver();

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -33,6 +34,12 @@ import java.util.Locale;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    @Autowired
+    private VipConfig vipConfig;
+
+
+    public static final String filePatterns = "/files";
+
     @Override
     public void addViewControllers(ViewControllerRegistry viewControllerRegistry){
 //        viewControllerRegistry.addViewController("/login").setViewName("/login");
@@ -49,8 +56,13 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
-        registry.addResourceHandler("/**").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/templates/");
-        registry.addResourceHandler("/**").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/static/");
+        registry.addResourceHandler("/static/**").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/static/");
+
+        registry.addResourceHandler(filePatterns+"/**").addResourceLocations("file:///"+vipConfig.getUploadPath());
+
+//        registry.addResourceHandler("/js").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/static/");
+//        registry.addResourceHandler("/images/**").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/static/");
+//        registry.addResourceHandler("/fonts/**").addResourceLocations(ResourceUtils.CLASSPATH_URL_PREFIX+"/static/");
 
     }
 
@@ -61,7 +73,6 @@ public class WebConfig implements WebMvcConfigurer {
         builder.serializationInclusion(JsonInclude.Include.NON_NULL);
         ObjectMapper objectMapper = builder.build();
         SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         simpleModule.addSerializer(Long.class, ToStringSerializer.instance);
         simpleModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
 
@@ -74,11 +85,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-                /*.allowedOrigins("*")
+        registry.addMapping("/**")
+                .allowedOrigins("*")
                 .allowCredentials(true)
                 .allowedMethods("GET", "POST", "DELETE", "PUT")
-                .maxAge(3600);*/
+                .maxAge(3600);
     }
 
     @Bean

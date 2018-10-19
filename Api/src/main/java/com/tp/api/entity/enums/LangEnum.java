@@ -23,6 +23,10 @@ public enum LangEnum implements IEnum {
         this.desc = desc;
     }
 
+
+
+
+
     @Override
     public Serializable getValue() {
         return this.value;

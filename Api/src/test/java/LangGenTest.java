@@ -2,6 +2,7 @@
 //import com.tp.api.entity.TbString;
 //import com.tp.api.entity.enums.LangEnum;
 //import com.tp.api.service.TbStringService;
+//import com.tp.api.utils.StringXmlParse;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,10 @@
 //public class LangGenTest {
 //
 //
-//    public static final String rootPath = "C:\\work\\zf\\\\app\\build\\intermediates\\incremental\\mergeGoogleDebugResources\\merged.dir\\";
+//    public static final String rootPath = "C:\\work\\zf\\\\app\\build\\intermediates\\incremental\\mergeDevDebugResources\\merged.dir\\";
 //
+//
+//    public static String appVersion = "v410";
 //
 //    @Autowired
 //    TbStringService tbStringService;
@@ -80,58 +83,16 @@
 //
 //        Element element =  doc.getDocumentElement();
 //        System.out.println("sss" + length + " " + nodes.item(0).getNodeName());
-//        parseXml(doc,lang);
 //
-//    }
-//
-//
-//
-//    public void parseXml(Document document,LangEnum lang){
-//
-//        NodeList strings = document.getElementsByTagName("string");
-//        System.out.println(":" +strings.getLength() );
-//
-//
-//        List<TbString> tbStrings = new LinkedList<>();
-//
-//        for (int i =0;i<strings.getLength();i++){
-//            Element node = (Element) strings.item(i);
-//            System.out.println(node.toString());
-//            if (node != null && node.getFirstChild() !=null && node.getNodeName().equals("string")){
-//                Node  name = node.getAttributes().getNamedItem("name");
-//                String key = name.getNodeValue();
-//                String value = node.getTextContent();
-////                System.out.println(key + ":" +value + " " + node.getFirstChild().getNodeType());
-//
-//                //元素 cdata
-//                if (node.getFirstChild().getNodeType() == 1){
-//                    value = "<Data><![CDATA[" + value + "]]></Data>";
-//                }
-//
-//
-//                TbString tbString = new TbString();
-//                tbString.setName(key);
-//                if (lang == LangEnum.AR){
-//                    tbString.setValueAr(value);
-//                }if (lang == LangEnum.DE){
-//                    tbString.setValueDe(value);
-//                }if (lang == LangEnum.FR){
-//                    tbString.setValueFr(value);
-//                }if (lang == LangEnum.ES){
-//                    tbString.setValueEs(value);
-//                }else {
-//                    tbString.setValueEn(value);
-//                }
-//
-//                tbStrings.add(tbString);
-//            }
-//
-//
+//        List<TbString> tbStrings = StringXmlParse.parseXml(doc,lang);
+//        for (TbString tbString :tbStrings){
+//            tbString.setAppVersion(appVersion);
 //        }
-//
 //        tbStringService.saveOrUpdateList(tbStrings);
-//
 //    }
+//
+//
+//
 //
 //
 //
