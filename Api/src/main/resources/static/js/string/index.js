@@ -70,6 +70,20 @@ function load() {
 									sortable: true
 								},
 								{
+									field : 'valueId',
+									title : 'Id',
+									sortable: true
+								},
+								{
+									field : 'valueTh',
+									title : 'Th',
+									sortable: true
+								},{
+									field : 'valueDe',
+									title : 'De',
+									sortable: true
+								},
+								{
 									field : 'flag',
 									title : '状态',
                                     sortable: true,

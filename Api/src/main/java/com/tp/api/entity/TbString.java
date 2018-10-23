@@ -58,6 +58,16 @@ public class TbString extends Model<TbString> {
      * 印度尼西亚语
      */
     private String valueId;
+    /**
+     * 泰语
+     */
+    private String valueTh;
+    /**
+     * 印度
+     */
+    private String valueIn;
+
+
 
 
 

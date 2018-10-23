@@ -3,12 +3,16 @@ package com.tp.api.service.impl;
 import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
+import com.tp.api.entity.TbAnalysisLog;
 import com.tp.api.entity.TbLog;
 import com.tp.api.mapper.TbLogMapper;
 import com.tp.api.mode.LogRequest;
 import com.tp.api.mode.LoggerMessage;
+import com.tp.api.service.TbAnalysisLogService;
 import com.tp.api.service.TbLogService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
+import com.tp.api.utils.DateUtis;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -27,6 +31,9 @@ import java.util.List;
 @Service
 public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements TbLogService {
 
+
+    @Autowired
+    TbAnalysisLogService tbAnalysisLogService;
 
 
     @Override
@@ -52,6 +59,16 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
             tbLog.setVisitsNumber(result.getVisitsNumber() +1 );
         }
         insertOrUpdate(tbLog);
+
+        TbAnalysisLog tbAnalysisLog = new TbAnalysisLog();
+        tbAnalysisLog.setDomain(tbLog.getDomain());
+        tbAnalysisLog.setUpdateDate(new Date());
+        tbAnalysisLog.setMonthDay(DateUtis.formatMMDD());
+        tbAnalysisLog.setMonth(DateUtis.getCurrentMonth()+"");
+        tbAnalysisLog.setDay(DateUtis.getCurrentDay()+"");
+
+        tbAnalysisLogService.saveAndUpdate(tbAnalysisLog);
+
        return tbLog;
     }
 
