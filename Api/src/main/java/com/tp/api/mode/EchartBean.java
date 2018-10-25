@@ -119,10 +119,11 @@ public class EchartBean {
         toolboxBean.feature.magicType.type.add("line");
         toolboxBean.feature.magicType.type.add("stack");
         toolboxBean.feature.magicType.type.add("tiled");
-        toolboxBean.feature.magicType.type.add("tiled");
+        toolboxBean.feature.magicType.type.add("force");
         toolboxBean.feature.magicType.type.add("chord");
         toolboxBean.feature.magicType.type.add("pie");
-        toolboxBean.feature.magicType.type.add("pie");
+        toolboxBean.feature.magicType.type.add("funnel");
+
 
         toolboxBean.feature.restore = new ToolboxBean.FeatureBean.RestoreBean();
         toolboxBean.feature.restore.show =true;

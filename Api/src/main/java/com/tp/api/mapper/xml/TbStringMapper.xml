@@ -16,6 +16,8 @@
         <result column="value_tw" property="valueTw" />
         <result column="value_de" property="valueDe" />
         <result column="value_id" property="valueId" />
+        <result column="value_th" property="valueTh" />
+        <result column="value_id" property="valueId" />
 
         <result column="version" property="version" />
         <result column="domain" property="domain" />

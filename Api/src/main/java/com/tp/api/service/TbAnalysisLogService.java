@@ -28,4 +28,7 @@ public interface TbAnalysisLogService extends IService<TbAnalysisLog> {
      EchartBean createEchartBean(AnalysLogRequest analysLogRequest);
 
      TbAnalysisLog saveAndUpdate(TbAnalysisLog tbAnalysisLog);
+
+
+     TbAnalysisLog getMaxChart();
 }

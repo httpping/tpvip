@@ -1,6 +1,7 @@
 package com.tp.api.controller;
 
 
+import com.tp.api.entity.TbAnalysisLog;
 import com.tp.api.entity.TbString;
 import com.tp.api.mode.AnalysLogRequest;
 import com.tp.api.mode.EchartBean;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -40,5 +42,14 @@ public class EchartsControler {
         EchartBean echartBean =  tbAnalysisLogService.createEchartBean(param);
 
         return  echartBean;
+    }
+
+
+
+    @PostMapping("/max")
+    @ResponseBody
+    public TbAnalysisLog maxData(Model model, AnalysLogRequest param){
+        TbAnalysisLog tbAnalysisLog =  tbAnalysisLogService.getMaxChart();
+        return  tbAnalysisLog;
     }
 }

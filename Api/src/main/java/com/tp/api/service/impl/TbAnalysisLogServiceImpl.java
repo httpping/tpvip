@@ -129,6 +129,23 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
         return request;
     }
 
+    @Override
+    public TbAnalysisLog getMaxChart() {
+
+        EntityWrapper condition =  new EntityWrapper();
+
+        String mmDD =  DateUtis.formatMMDD();
+        condition.where("month_day = {0}", mmDD);
+
+        condition.orderBy("count",false);
+        List<TbAnalysisLog> tbAnalysisLogs =  selectList(condition);
+        if (tbAnalysisLogs !=null && tbAnalysisLogs.size()>0) {
+                return tbAnalysisLogs.get(0);
+        }
+
+            return null;
+    }
+
 
     /**
      * 创建 数据

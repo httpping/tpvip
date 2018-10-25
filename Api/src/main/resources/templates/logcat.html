@@ -46,13 +46,13 @@
         <div class="btn-group mr-2" role="group" aria-label="First group">
             <button onclick="openSocket()" type="button" class="btn btn-outline-secondary">开启日志</button>
             <button onclick="closeWebSocket()" type="button" class="btn btn-outline-secondary">关闭日志</button>
-            <button onclick="clearLog()" type="button" class="btn btn-outline-secondary">清除日志</button>
+            <button  onclick="clearLog()" type="button" class="btn btn-outline-secondary">清除日志</button>
         </div>
         <div class="btn-group mr-2" role="group" aria-label="Second group">
 
             <button onclick="openOld()" type="button" class="btn btn-outline-success">历史日志</button>
             <button onclick="modelControler()" type="button" class="btn btn-outline-success">接口模拟</button>
-            <button onclick="echartControler()" type="button" class="btn btn-outline-success">统计报告</button>
+            <button id="analysis_btn" onclick="echartControler()" type="button" class="btn btn-outline-success" data-toggle="统计报表" data-placement="top">统计报表</button>
 
         </div>
         <div class="btn-group" role="group" aria-label="Third group">
@@ -362,7 +362,32 @@
         boxheight();
     }
 
-</script>
+    //第一名的取值
+    function no1() {
+        $.ajax({
+            type: "post",
+            url: "/echarts/max",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (message) {
+                // refreshData(message);
+                // alert(message.count);
 
+                // $('#analysis_btn').tooltip('当前冠军 NO1：'+ message.domain)
+                $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  '昨日冠军 :'+message.domain);
+
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    no1();
+
+</script>
+<script>
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
 </body>
 </html>
