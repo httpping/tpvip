@@ -9,12 +9,12 @@ import com.tp.api.mapper.TbAnalysisLogMapper;
 import com.tp.api.mode.AnalysLogRequest;
 import com.tp.api.mode.EchartBean;
 import com.tp.api.mode.EchartBean.XAxisBean;
-import com.tp.api.mode.EchartBean.YAxisBean;
 import com.tp.api.mode.StringFilterRequestParam;
 import com.tp.api.service.TbAnalysisLogService;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.tp.api.utils.DateUtis;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
@@ -32,9 +32,11 @@ import java.util.*;
 public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, TbAnalysisLog> implements TbAnalysisLogService {
 
     @Override
-    public List<TbAnalysisLog> getGroupDomain(String name ) {
+    public List<TbAnalysisLog> getGroupBy(String name ) {
         Condition condition =  Condition.create();
+        condition.where("count != {0}",0);
         condition.groupBy(name);
+
         List<TbAnalysisLog> groups = baseMapper.selectList(condition);
         return groups;
     }
@@ -45,6 +47,7 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
         if (!StringUtils.isEmpty(request.getDomain())) {
             condition.where("domain = {0}", request.getDomain());
         }
+        condition.where("count !={0}",0);
         condition.orderBy("month_day");
         Page page = new Page<TbString>(0, 30);
         EntityWrapper<StringFilterRequestParam> entityWrapper = new EntityWrapper<>();
@@ -56,7 +59,7 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
     @Override
     public EchartBean createEchartBean(AnalysLogRequest analysLogRequest) {
 
-        List<TbAnalysisLog> tbAnalysisLogs = getGroupDomain("domain");
+        List<TbAnalysisLog> tbAnalysisLogs = getGroupBy("domain");
 
         EchartBean bean = new EchartBean();
 
@@ -68,11 +71,11 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
         bean.series = seriesBeans;
 
         //拿到所有的月份
-        List<TbAnalysisLog> monthDays = getGroupDomain("month_day");
+        List<TbAnalysisLog> monthDays = getGroupBy("month_day");
         monthDays.sort(new Comparator<TbAnalysisLog>() {
             @Override
             public int compare(TbAnalysisLog o1, TbAnalysisLog o2) {
-                return o1.getMonthDay().compareTo(o2.getMonthDay());
+                return o1.getUpdateDate().compareTo(o2.getUpdateDate());
             }
         });
 
@@ -98,7 +101,7 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
         return bean;
     }
 
-    @Transactional
+
     @Override
     public TbAnalysisLog saveAndUpdate(TbAnalysisLog request) {
 
@@ -125,7 +128,6 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
 
         request.setHour(DateUtis.getCurrentHour()+"");
         insertOrUpdate(request);
-
         return request;
     }
 
@@ -144,6 +146,29 @@ public class TbAnalysisLogServiceImpl extends ServiceImpl<TbAnalysisLogMapper, T
         }
 
             return null;
+    }
+
+    @Override
+    public TbAnalysisLog getCurDaySumChart() {
+
+        EntityWrapper condition =  new EntityWrapper();
+
+        String mmDD =  DateUtis.formatMMDD();
+        condition.where("month_day = {0}", mmDD);
+
+        condition.orderBy("count",false);
+        List<TbAnalysisLog> tbAnalysisLogs =  selectList(condition);
+        TbAnalysisLog result = null;
+        for (TbAnalysisLog tbAnalysisLog: tbAnalysisLogs){
+            if (result == null){
+                result = tbAnalysisLog;
+            }else {
+                result.setCount(result.getCount() + tbAnalysisLog.getCount());
+            }
+        }
+
+
+        return result;
     }
 
 

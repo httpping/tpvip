@@ -52,4 +52,11 @@ public class EchartsControler {
         TbAnalysisLog tbAnalysisLog =  tbAnalysisLogService.getMaxChart();
         return  tbAnalysisLog;
     }
+
+    @PostMapping("/sum_cur")
+    @ResponseBody
+    public TbAnalysisLog curDaySum(Model model, AnalysLogRequest param){
+        TbAnalysisLog tbAnalysisLog =  tbAnalysisLogService.getCurDaySumChart();
+        return  tbAnalysisLog;
+    }
 }

@@ -40,7 +40,8 @@
 <body style="height: 100%;"  >
 
 <div id="toolbar" style="margin: 10px 10px 10px 20px;" class="form-row align-items-center">
-    <img th:src="@{/static/images/logo.png}" width="35px" />
+    <img th:src="@{/static/images/logo.png}" width="35px" />&nbsp;
+    <span class="t_num t_num1"></span>&nbsp;
 
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -62,12 +63,13 @@
         </div>
     </div>
 
-&nbsp;&nbsp;&nbsp;<!-- 用户过滤id:--><input type="hidden" id="user_id" value="" onchange="userIdChange()"/>
 
-    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;
+    &nbsp;&nbsp;&nbsp;<!-- 用户过滤id:--><input type="hidden" id="user_id" value="" onchange="userIdChange()"/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
 <div class="col-auto my-1">
     <select class="custom-select mr-sm-2" id="cur_system" onchange="levelChange()">
-        <option value="0">Choose...</option>
+        <option value="0">系统...</option>
         <option value="1">Android</option>
         <option value="2">iOS</option>
 
@@ -75,9 +77,15 @@
 </div>
 <!--<input type="checkbox" id="android" onchange="levelChange()" > Android </input> &nbsp;&nbsp;-->
 <!--<input type="checkbox" id="ios" onchange="levelChange()">iOS</input>-->
-&nbsp;&nbsp; <input type="text" id="platform_name" onchange="plfatformChange()"  placeholder="平台过滤"/>
+&nbsp;&nbsp; <input type="hidden" id="platform_name" onchange="plfatformChange()"  placeholder="平台过滤"/>
+    <div class="col-auto my-1">
+        <select class="custom-select mr-sm-2" id="platform" name="platform" onchange="platformSelectedChange()">
+            <option value="">平台过滤...</option>
+        </select>
+    </div>
+
 &nbsp;&nbsp; <input type="text" id="url_path" value="" onchange="urlChange()" placeholder="关键字过滤"/>
-&nbsp; <input id="text" type="text" placeholder="匿名勾搭" onkeydown="send()"/>
+<input id="text" type="hidden" placeholder="匿名勾搭"  onkeydown="send()"/>
 </div>
 <!--<hr/>-->
 <div id="log-container" style="height: 870px; width: 99%;  overflow-y: scroll; background: #333; color: #aaa; padding: 12px;">
@@ -97,7 +105,7 @@
         $("#user_id").val(dt);
 
         var platform = sessionStorage.getItem("platform_name");
-        $("#platform_name").val(platform);
+        // $("#platform_name").val(platform);
 
 
         var url_path = sessionStorage.getItem("url_path");
@@ -119,7 +127,7 @@
 
     //打开socket
     var websocket = null;
-
+    var allMsgNumber = 0;
     function openSocket() {
         /*<![CDATA[*/
 
@@ -154,6 +162,8 @@
         //接收到消息的回调方法
         websocket.onmessage = function (event) {
             setMessageInnerHTML(event.data);
+            allMsgNumber = allMsgNumber  + 1;
+            show_num1(allMsgNumber)
         }
 
         //连接关闭的回调方法
@@ -203,9 +213,9 @@
     }
 
     function plfatformChange() {
-        var platform = $("#platform_name").val(); //获取
+        // var platform = $("#platform_name").val(); //获取
         //添加key-value 数据到 sessionStorage
-        sessionStorage.setItem("platform_name", platform);
+        // sessionStorage.setItem("platform_name", platform);
     }
 
     function urlChange() {
@@ -297,7 +307,7 @@
             }*/
         }
 
-        var platform_name = $("#platform_name").val(); //获取
+        var platform_name = $("#platform").val(); //获取
         if (!isNull(platform_name)) {
             if (platform_name != content.platform) {
                 return;
@@ -374,7 +384,7 @@
                 // alert(message.count);
 
                 // $('#analysis_btn').tooltip('当前冠军 NO1：'+ message.domain)
-                $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  '昨日冠军 :'+message.domain);
+                $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  ''+message.domain);
 
             },
             error: function (message) {
@@ -385,9 +395,145 @@
 
     no1();
 
+
+
+
+
+    //第一名的取值
+    function sumCount() {
+        $.ajax({
+            type: "post",
+            url: "/echarts/sum_cur",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (message) {
+                // refreshData(message);
+                // alert(message.count);
+
+                // $('#analysis_btn').tooltip('当前冠军 NO1：'+ message.domain)
+                // $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  '昨日冠军 :'+message.domain);
+                allMsgNumber = allMsgNumber + message.count;
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    sumCount();
+
+
+    //这里用setTimeout代替ajax请求进行演示
+    window.setInterval(function () {
+
+        sumCount();
+
+        getGroupBy();
+
+    },15000);
+
+
+    /**
+     * 获取 分类
+     **/
+    function getGroupBy() {
+        $.ajax({
+            type: "post",
+            url: "/api/getGroupBy",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data:JSON.stringify({group:"platform"}),
+            success: function (message) {
+                refreshGroupPlatform(message);
+            },
+            error: function (message) {
+                // $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    getGroupBy();
+
+    //刷新 platfrom
+    function refreshGroupPlatform(message) {
+        // alert(message)
+        var platform = sessionStorage.getItem("platform_name"); //获取
+        var selected = false ;
+        $("#platform").empty();
+        $("#platform").append("<option value=\"\">平台过滤...</option>");
+        for ( var i = 0; i < message.length; i++) {
+            if (message[i].platform !=null) {
+
+                if (platform == message[i].platform){
+                    $("#platform").append("<option value='" + message[i].platform + "' selected>" + message[i].platform + "</option>");
+                    selected = true;
+                }else {
+                    $("#platform").append("<option value='" + message[i].platform + "'>" + message[i].platform + "</option>");
+                }
+            }
+        }
+
+        //选择已清空
+        if (!selected){
+            // sessionStorage.setItem("platform_name", null);
+            sessionStorage.removeItem("platform_name")
+        }
+    }
+
+    /**
+     * 选择平台
+     */
+    function platformSelectedChange(){
+        var platform = $("#platform").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("platform_name", platform);
+    }
+
 </script>
 <script>
     $(function () { $("[data-toggle='tooltip']").tooltip(); });
 </script>
+
+
+<style>
+
+    .t_num i {
+        width: 33px;
+        height: 40px;
+        display: inline-block;
+        background: url(/static/images/number1.png) no-repeat;
+        background-position: 0 0;
+    }
+</style>
+
+
+<script type="text/javascript" src="/static/js/digitalScroll.js"></script>
+<script type="text/javascript">
+    // $(function() {
+    //     setInterval(function(){
+    //         show_num1(sum)
+    //     },1000);
+    // });
+
+    function show_num1(n) {
+        console.log(n);
+        var it = $(".t_num1 i");
+        var len = String(n).length;
+        for(var i = 0; i < len; i++) {
+            if(it.length <= i) {
+                $(".t_num1").append("<i></i>");
+            }
+            var num = String(n).charAt(i);
+            //根据数字图片的高度设置相应的值
+            var y = -parseInt(num) * 58;
+            var obj = $(".t_num1 i").eq(i);
+            obj.animate({
+                backgroundPosition: '(0 ' + String(y) + 'px)'
+            }, 'fast', 'swing', function() {});
+        }
+        $("#cur_num").val(n);
+    }
+</script>
+
 </body>
 </html>

@@ -3,6 +3,8 @@ package com.tp.api.controller;
 
 import com.tp.api.entity.ApiModel;
 import com.tp.api.entity.TbLog;
+import com.tp.api.entity.TbString;
+import com.tp.api.mode.GroupByRequest;
 import com.tp.api.mode.LoggerMessage;
 import com.tp.api.service.ApiModelService;
 import com.tp.api.service.TbLogService;
@@ -124,6 +126,14 @@ public class TbLogController {
         return "/api_show";
     }
 
+
+
+    @PostMapping("/getGroupBy")
+    @ResponseBody
+    public List<TbLog> groupBy(@RequestBody GroupByRequest group){
+        List<TbLog> result = tbLogService.groupBy(group.group);
+        return result;
+    }
 }
 
 

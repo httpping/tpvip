@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.mapper.Wrapper;
 import com.tp.api.entity.TbAnalysisLog;
 import com.tp.api.entity.TbLog;
+import com.tp.api.entity.TbString;
 import com.tp.api.mapper.TbLogMapper;
 import com.tp.api.mode.LogRequest;
 import com.tp.api.mode.LoggerMessage;
@@ -129,4 +130,14 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
         }
         return null;
     }
+
+    @Override
+    public List<TbLog> groupBy(String name) {
+        Condition condition =  Condition.create();
+        condition.groupBy(name);
+        List<TbLog> groups = baseMapper.selectList(condition);
+        return groups;
+    }
+
+
 }

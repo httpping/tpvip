@@ -19,7 +19,7 @@ import java.util.List;
 public interface TbAnalysisLogService extends IService<TbAnalysisLog> {
 
 
-     List<TbAnalysisLog> getGroupDomain(String name );
+     List<TbAnalysisLog> getGroupBy(String name );
 
 
      Page<TbAnalysisLog> getLastMonth(TbAnalysisLog tbAnalysisLog);
@@ -31,4 +31,7 @@ public interface TbAnalysisLogService extends IService<TbAnalysisLog> {
 
 
      TbAnalysisLog getMaxChart();
+
+     TbAnalysisLog getCurDaySumChart();
+
 }

@@ -13,6 +13,9 @@ public enum LangEnum implements IEnum {
     ES("es", "西班牙"),
     AR("ar", "沙特阿拉伯"),
     DE("de","德语"),
+    IN("in","印度尼西亚"),
+    TH("th","泰语"),
+    TW("tw","台湾语"),
     FR("fr", "法语");
 
     private String value;
