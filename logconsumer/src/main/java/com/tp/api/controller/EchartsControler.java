@@ -6,10 +6,7 @@ import com.tp.api.entity.TbAnalysisLog;
 import com.tp.api.mode.AnalysLogRequest;
 import com.tp.api.mode.EchartBean;
 import com.tp.api.service.TbAnalysisLogService;
-import com.tp.api.service.TestService;
-import com.tp.api.service.TestServiceCom;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +22,10 @@ public class EchartsControler {
     @Reference
     TbAnalysisLogService tbAnalysisLogService;
 
-    @Autowired
-    TestServiceCom testService;
 
     @GetMapping
     public String index(Model model, AnalysLogRequest param){
         model.addAttribute("headerTitle","Domain 统计报表");
-
-//        testService.sayHello();
 
         EchartBean echartBean =  tbAnalysisLogService.createEchartBean(param);
         model.addAttribute("echartData",echartBean);
