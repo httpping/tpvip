@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html style="height: 100%" xmlns:th="http://www.springframework.org/schema/security">
+<head>
+    <meta charset="utf-8">
+</head>
+<body style="height: 100%; margin: 0">
+
+<header th:include="/common::header"></header>
+
+
+    <div id="container" style="height: 50%;width:100%;margin-top: 30px"></div>
+<!--<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>-->
+
+<script th:src="@{/static/js/echarts.min.js}"></script>
+<script th:src="@{/static/js/macarons.js}"></script>
+
+
+<!--<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-gl/echarts-gl.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts-stat/ecStat.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+<script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/simplex.js"></script>-->
+<!--<script type="text/javascript">
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+    option = {
+        title: {
+            left: 'center',
+            text: '接口调用频率分布',
+        },
+
+        tooltip: {
+            trigger: 'axis',
+            axisPointer: {
+                type: 'cross'
+            }
+        },
+        toolbox: {
+            show: true,
+            feature: {
+                saveAsImage: {}
+            }
+        },
+        legend: {
+            top: '10%',
+            data:['最高气温','最低气温']
+        },
+        xAxis:  {
+            type: 'category',
+            boundaryGap: false,
+            data: ['00:00', '01:15', '02:30', '03:45', '05:00', '06:15', '07:30', '08:45', '10:00', '11:15', '12:30', '13:45', '15:00', '16:15', '17:30', '18:45', '20:00', '21:15', '22:30', '23:45']
+        },
+        yAxis: {
+            top:'20%',
+            type: 'value',
+            axisLabel: {
+                formatter: '{value} N'
+            },
+            axisPointer: {
+                snap: true
+            }
+        },
+        series : [
+            {
+                name:'最高气温',
+                type:'line',
+                color: 'red',
+                smooth: true,
+                data:   [1300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390, 400, 500, 600, 750, 800, 700, 600, 400]
+            },
+            {
+                name:'最低气温',
+                type:'line',
+                color: 'blue',
+                smooth: true,
+                data: [300, 2280, 450, 260, 250, 300, 500, 500, 400, 390, 180, 390, 400, 500, 600, 750, 800, 700, 600, 400]
+            }
+
+        ]
+
+
+    };
+
+
+    function refresh() {
+        // myChart.series[0].data = JSON.stringify(' [1300, 280, 250, 260, 270, 300, 550, 500, 400, 390, 380, 390, 400, 500, 600, 750, 800, 700, 600, 400]')
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+    }
+
+    refresh()
+
+</script>-->
+
+
+<script th:inline="javascript">
+    var echart = [[${echartData}]];
+    //console.log(message);
+    var dom = document.getElementById("container");
+    var myChart = echarts.init(dom,'macarons');
+    var app = {};
+    option = echart;
+    if (option && typeof option === "object") {
+        myChart.setOption(option, true);
+    }
+
+
+    function refreshData(data){
+        if(!myChart){
+            return;
+        }
+
+        //更新数据
+        var option = data;
+        myChart.setOption(option);
+        // myChart.reload()
+    }
+
+</script>
+
+<script type="text/javascript">
+
+    //这里用setTimeout代替ajax请求进行演示
+    window.setInterval(function () {
+        var data ;
+       /* $.get("/echarts/data",function(responseTxt,statusTxt,xhr)
+        {
+            data = responseTxt;
+        });
+*/
+        $.ajax({
+            type: "get",
+            url: "/echarts/data",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (message) {
+                refreshData(message);
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+
+
+    },10000);
+
+
+</script>
+</body>
+</html>

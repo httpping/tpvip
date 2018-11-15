@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8"/>
+    <title>WebSocket Logger</title>
+    <!--<script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/sockjs-client/1.1.4/sockjs.min.js"></script>-->
+    <!--<script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.min.js"></script>-->
+    <!-- Bootstrap -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>-->
+    <!--<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+    <!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+    <!--&lt;!&ndash; Bootstrap CSS &ndash;&gt;-->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <script th:src="@{/static/js/jquery.js}"></script>
+    <script th:src="@{/static/js/popper.min.js}"></script>
+    <script th:src="@{/static/js/bootstrap.js}"></script>
+    <link  rel="stylesheet" th:href="@{/static/css/bootstrap.css}"></link>
+
+    <style>
+
+        a {
+            color: red;
+        }
+
+        hr{
+            background-color: snow;
+        }
+
+        body{height:100%}
+
+
+    </style>
+
+</head>
+<body style="height: 100%;"  >
+
+<div id="toolbar" style="margin: 10px 10px 10px 20px;" class="form-row align-items-center">
+    <img th:src="@{/static/images/logo.png}" width="35px" />&nbsp;
+    <span class="t_num t_num1"></span>&nbsp;
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+        <div class="btn-group mr-2" role="group" aria-label="First group">
+            <button onclick="openSocket()" type="button" class="btn btn-outline-secondary">开启日志</button>
+            <button onclick="closeWebSocket()" type="button" class="btn btn-outline-secondary">关闭日志</button>
+            <button  onclick="clearLog()" type="button" class="btn btn-outline-secondary">清除日志</button>
+        </div>
+        <div class="btn-group mr-2" role="group" aria-label="Second group">
+
+            <button onclick="openOld()" type="button" class="btn btn-outline-success">历史日志</button>
+            <button onclick="modelControler()" type="button" class="btn btn-outline-success">接口模拟</button>
+            <button id="analysis_btn" onclick="echartControler()" type="button" class="btn btn-outline-success" data-toggle="统计报表" data-placement="top">统计报表</button>
+
+        </div>
+        <div class="btn-group" role="group" aria-label="Third group">
+
+            <button onclick="openApi()" type="button" class="btn btn-outline-dark">API 接入</button>
+            <button onclick="druidControler()" type="button" class="btn btn-outline-dark">性能监控</button>
+        </div>
+    </div>
+
+
+    &nbsp;&nbsp;&nbsp;<!-- 用户过滤id:--><input type="hidden" id="user_id" value="" onchange="userIdChange()"/>
+
+    &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;
+<div class="col-auto my-1">
+    <select class="custom-select mr-sm-2" id="cur_system" onchange="levelChange()">
+        <option value="0">系统...</option>
+        <option value="1">Android</option>
+        <option value="2">iOS</option>
+
+    </select>
+</div>
+<!--<input type="checkbox" id="android" onchange="levelChange()" > Android </input> &nbsp;&nbsp;-->
+<!--<input type="checkbox" id="ios" onchange="levelChange()">iOS</input>-->
+&nbsp;&nbsp; <input type="hidden" id="platform_name" onchange="plfatformChange()"  placeholder="平台过滤"/>
+    <div class="col-auto my-1">
+        <select class="custom-select mr-sm-2" id="platform" name="platform" onchange="platformSelectedChange()">
+            <option value="">平台过滤...</option>
+        </select>
+    </div>
+
+&nbsp;&nbsp; <input type="text" id="url_path" value="" onchange="urlChange()" placeholder="关键字过滤"/>
+<input id="text" type="hidden" placeholder="匿名勾搭"  onkeydown="send()"/>
+</div>
+<!--<hr/>-->
+<div id="log-container" style="height: 870px; width: 99%;  overflow-y: scroll; background: #333; color: #aaa; padding: 12px;">
+    <div id="log_content"></div>
+</div>
+<script>
+
+
+
+    $(document).ready(function () {
+        openSocket();
+    });
+
+    $("#cur_system").ready(function () {
+        //通过key来获取value
+        var dt = sessionStorage.getItem("user_id");
+        $("#user_id").val(dt);
+
+        var platform = sessionStorage.getItem("platform_name");
+        // $("#platform_name").val(platform);
+
+
+        var url_path = sessionStorage.getItem("url_path");
+        $("#url_path").val(url_path);
+
+
+        var level = sessionStorage.getItem("level")
+        if (level == null){
+            level = 0;
+        }
+        $("#cur_system").prop("value",level);
+
+        // $("cur_system").val(level)
+        // $("cur_system").options[level].selected = true;
+        // alert(level)
+
+    });
+
+
+    //打开socket
+    var websocket = null;
+    var allMsgNumber = 0;
+    function openSocket() {
+        /*<![CDATA[*/
+
+        if (websocket != null) {
+            closeWebSocket()
+        }
+
+        var curHost = window.location.href;
+        var parser = document.createElement('a');
+        parser.href = curHost
+
+        //判断当前浏览器是否支持WebSocket
+        if ('WebSocket' in window) {
+            websocket = new WebSocket("ws://" + parser.host + "/websocket");
+        }
+        else {
+            alert('Not support websocket')
+        }
+
+        //连接发生错误的回调方法
+        websocket.onerror = function () {
+            setMessageInnerHTML("连接出错了...");
+            alert("连接出错了...")
+        };
+
+        //连接成功建立的回调方法
+        websocket.onopen = function (event) {
+            setMessageInnerHTML("连接成功了...");
+            alert("连接成功了...")
+        }
+
+        //接收到消息的回调方法
+        websocket.onmessage = function (event) {
+            setMessageInnerHTML(event.data);
+            allMsgNumber = allMsgNumber  + 1;
+            show_num1(allMsgNumber)
+        }
+
+        //连接关闭的回调方法
+        websocket.onclose = function () {
+            setMessageInnerHTML("连接关闭了...");
+            alert("连接关闭了...")
+        }
+
+        //监听窗口关闭事件，当窗口关闭时，主动去关闭websocket连接，防止连接还没断开就关闭窗口，server端会抛异常。
+        window.onbeforeunload = function () {
+            websocket.close();
+        }
+
+        /*]]>*/
+
+    }
+
+
+    //关闭连接
+    function closeWebSocket() {
+        websocket.close();
+    }
+
+    //发送消息
+    function send() {
+//        alert(event.keyCode())
+        if(event.keyCode == "13") {
+            var message = document.getElementById('text').value;
+            websocket.send( message  + "." );
+        }
+    }
+
+
+    function clearLog() {
+        $("#log-container div").empty();
+    }
+
+    function isNull(data) {
+        return (data == "" || data == undefined || data == null) ? true : false;
+    }
+
+
+    function userIdChange() {
+        var user_id_val = $("#user_id").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("user_id", user_id_val);
+    }
+
+    function plfatformChange() {
+        // var platform = $("#platform_name").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        // sessionStorage.setItem("platform_name", platform);
+    }
+
+    function urlChange() {
+        var url_path = $("#url_path").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("url_path", url_path);
+    }
+
+
+    function levelChange() {
+
+        var curSys = $("#cur_system").val();
+        // alert(curSys)
+        sessionStorage.setItem("level",curSys);
+
+    }
+
+    function openOld() {
+        window.open('/api')
+    }
+
+    function druidControler() {
+        window.open('/druid')
+    }
+
+    function modelControler() {
+        window.open('/model')
+    }
+    function echartControler() {
+        window.open('/echarts')
+    }
+
+    /**
+     * 接入方法
+     */
+    function openApi() {
+        window.open('/swagger-ui.html')
+    }
+
+
+    var max_logs = 35;
+    var number = 1;
+
+    //将消息显示在网页上
+    function setMessageInnerHTML(innerHTML) {
+        var content
+        try {
+            content = JSON.parse(innerHTML);
+        }
+        catch (err) {
+            // alert(innerHTML)
+
+            var str = "<div>" + "<span style='color: red;'>来自远方的消息： </span>" + "<span> "+innerHTML +"</span>" +"<br/>" +"</div>"
+            $("#log_content").append(str)
+
+            $("#log_content").scrollTop($("#log_content").height() - $("#log-container").height());
+
+            var lenth = $("#log_content").children().length;
+            if (lenth >max_logs){
+                $("#log_content").children().first().remove()
+            }
+
+            return
+        }
+
+
+        var ios = $('#ios').is(":checked");
+        var android = $('#android').is(":checked");
+
+        var level =  $("#cur_system").val();
+        if (level != 0){
+            if (level == 2) {
+                if (content.level.toLowerCase().indexOf("ios") < 0) {
+                    return;
+                }
+            }
+            if (level == 1) {
+                if (content.level.toLowerCase().indexOf("android") < 0) {
+                    return;
+                }
+            }
+        }
+
+        // alert(ios +" -" + android )
+        var user_id_val = $("#user_id").val(); //获取
+        if (!isNull(user_id_val)) {
+            /*if (user_id_val != content.userId) {
+                return;
+            }*/
+        }
+
+        var platform_name = $("#platform").val(); //获取
+        if (!isNull(platform_name)) {
+            if (platform_name != content.platform) {
+                return;
+            }
+        }
+
+        var url_path = sessionStorage.getItem("url_path");
+        if (!isNull(url_path)) {
+            if (content.body.toLowerCase().indexOf(url_path.toLowerCase()) < 0) {
+                return;
+            }
+
+        }
+        //过滤掉.google链接
+        if (content.url !=null && content.url.toLowerCase().indexOf('\.google')>0) {
+            return
+        }
+
+
+        var str = "<div>" + "<div> ------ " + content.level + " : " + content.timestamp + " ------ </div>"
+            + "<div>" + content.body +"</div>" +"<br/>" + "</div>"
+
+        $("#log_content").append(str)
+
+
+        $("#log-container").scrollTop($("#log_content").height() - $("#log-container").height());
+        // $("#log-container div").removeChild( $("#log-container div").firstChild());
+        var lenth = $("#log_content").children().length;
+        if (lenth >max_logs){
+            $("#log_content").children().first().remove()
+        }
+
+        number++;
+        if (number >= 100) {
+            number = 0;
+           // document.getElementById('message').innerHTML = '<br/>';
+        }
+    }
+
+
+    function boxheight(){ //函数：获取尺寸
+        //获取浏览器窗口高度
+        var winHeight=0;
+        if (window.innerHeight)
+            winHeight = window.innerHeight;
+        else if ((document.body) && (document.body.clientHeight))
+            winHeight = document.body.clientHeight;
+        //通过Document对body进行检测，获取浏览器可视化高度
+        if (document.documentElement && document.documentElement.clientHeight)
+            winHeight = document.documentElement.clientHeight;
+        //DIV高度为浏览器窗口高度
+        var toolbarH = document.getElementById("toolbar").clientHeight
+        console.log(toolbarH)
+        console.log((winHeight -toolbarH -30))
+        document.getElementById("log-container").style.height= (winHeight -toolbarH -30) +"px";
+    }
+
+
+    boxheight(); //执行函数
+    //当浏览器窗口大小改变时，设置显示内容的高度
+    window.onresize=function(){
+        boxheight();
+    }
+
+    //第一名的取值
+    function no1() {
+        $.ajax({
+            type: "post",
+            url: "/echarts/max",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (message) {
+                // refreshData(message);
+                // alert(message.count);
+
+                // $('#analysis_btn').tooltip('当前冠军 NO1：'+ message.domain)
+                $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  ''+message.domain);
+
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    no1();
+
+
+
+
+
+    //第一名的取值
+    function sumCount() {
+        $.ajax({
+            type: "post",
+            url: "/echarts/sum_cur",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (message) {
+                // refreshData(message);
+                // alert(message.count);
+
+                // $('#analysis_btn').tooltip('当前冠军 NO1：'+ message.domain)
+                // $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  '昨日冠军 :'+message.domain);
+                allMsgNumber = allMsgNumber + message.count;
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    sumCount();
+
+
+    //这里用setTimeout代替ajax请求进行演示
+    window.setInterval(function () {
+
+        sumCount();
+
+        getGroupBy();
+
+    },15000);
+
+
+    /**
+     * 获取 分类
+     **/
+    function getGroupBy() {
+        $.ajax({
+            type: "post",
+            url: "/api/getGroupBy",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data:JSON.stringify({group:"platform"}),
+            success: function (message) {
+                refreshGroupPlatform(message);
+            },
+            error: function (message) {
+                // $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    getGroupBy();
+
+    //刷新 platfrom
+    function refreshGroupPlatform(message) {
+        // alert(message)
+        var platform = sessionStorage.getItem("platform_name"); //获取
+        var selected = false ;
+        $("#platform").empty();
+        $("#platform").append("<option value=\"\">平台过滤...</option>");
+        for ( var i = 0; i < message.length; i++) {
+            if (message[i].platform !=null) {
+
+                if (platform == message[i].platform){
+                    $("#platform").append("<option value='" + message[i].platform + "' selected>" + message[i].platform + "</option>");
+                    selected = true;
+                }else {
+                    $("#platform").append("<option value='" + message[i].platform + "'>" + message[i].platform + "</option>");
+                }
+            }
+        }
+
+        //选择已清空
+        if (!selected){
+            // sessionStorage.setItem("platform_name", null);
+            sessionStorage.removeItem("platform_name")
+        }
+    }
+
+    /**
+     * 选择平台
+     */
+    function platformSelectedChange(){
+        var platform = $("#platform").val(); //获取
+        //添加key-value 数据到 sessionStorage
+        sessionStorage.setItem("platform_name", platform);
+    }
+
+</script>
+<script>
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
+
+
+<style>
+
+    .t_num i {
+        width: 33px;
+        height: 40px;
+        display: inline-block;
+        background: url(/static/images/number1.png) no-repeat;
+        background-position: 0 0;
+    }
+</style>
+
+
+<script type="text/javascript" src="/static/js/digitalScroll.js"></script>
+<script type="text/javascript">
+    // $(function() {
+    //     setInterval(function(){
+    //         show_num1(sum)
+    //     },1000);
+    // });
+
+    function show_num1(n) {
+        console.log(n);
+        var it = $(".t_num1 i");
+        var len = String(n).length;
+        for(var i = 0; i < len; i++) {
+            if(it.length <= i) {
+                $(".t_num1").append("<i></i>");
+            }
+            var num = String(n).charAt(i);
+            //根据数字图片的高度设置相应的值
+            var y = -parseInt(num) * 58;
+            var obj = $(".t_num1 i").eq(i);
+            obj.animate({
+                backgroundPosition: '(0 ' + String(y) + 'px)'
+            }, 'fast', 'swing', function() {});
+        }
+        $("#cur_num").val(n);
+    }
+</script>
+
+</body>
+</html>

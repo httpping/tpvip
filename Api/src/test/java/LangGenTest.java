@@ -1,8 +1,8 @@
-//import com.tp.api.Application;
-//import com.tp.api.entity.TbString;
-//import com.tp.api.entity.enums.LangEnum;
-//import com.tp.api.service.TbStringService;
-//import com.tp.api.utils.StringXmlParse;
+//import com.tp.com.api.Application;
+//import com.tp.com.api.entity.TbString;
+//import com.tp.com.api.entity.enums.LangEnum;
+//import com.tp.com.api.dbservice.TbStringService;
+//import com.tp.com.api.utils.StringXmlParse;
 //import org.junit.Test;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;

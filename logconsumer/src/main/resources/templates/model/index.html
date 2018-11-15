@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <title>移动组的日志系统</title>
+
+    <style>
+
+
+
+    </style>
+</head>
+<body>
+<header th:include="/common::header"></header>
+
+<!--
+<input type="text"  id="platform_name" class="form-control" placeholder="平台过滤:" aria-label="平台过滤:" />
+<button onclick="clearLog()" type="button" class="btn btn-dark">清除历史日志(默认所有)</button>
+-->
+<div style="margin: 20px">
+<div class="input-group mb-3" style="width:95%">
+    <input  th:value="${request.domain}" id="platform_name" type="text" class="form-control" placeholder="Filter Domain" aria-label="Recipient's username" aria-describedby="basic-addon2">
+    &nbsp;&nbsp;&nbsp;
+    <input  th:value="${request.url}" id="url" type="text" class="form-control" placeholder="Filter Url " aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+    &nbsp;&nbsp;&nbsp;
+    <input  th:value="${request.createdBy}" id="createdBy" type="text" class="form-control" placeholder="Filter Created By" aria-label="Recipient's username" aria-describedby="basic-addon2">
+
+
+    &nbsp;&nbsp;&nbsp;
+    <div class="input-group-append">
+        <button  onclick="search()" class="btn btn-outline-primary" type="button" >  &nbsp;搜索 &nbsp; </button>
+        &nbsp;&nbsp;&nbsp;
+        <button  onclick="addModel()" class="btn btn-outline-success" type="button" > &nbsp;添加 &nbsp;</button>
+    </div>
+</div>
+<span th:text="${result}"></span>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Url</th>
+        <th scope="col">Domain</th>
+        <th scope="col">Platform</th>
+        <th scope="col">UpdateTime</th>
+        <th scope="col">Created By</th>
+        <th scope="col">Option</th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <tr th:each="log ,logStat: ${models}" onclick="goNext(${log.id})">
+        <th scope="row" th:text="${logStat.index + 1}"></th>
+        <td th:text="${log.apiname}"></td>
+        <td th:text="${log.url}"></td>
+        <td th:text="${log.domain}"></td>
+        <td th:text="${log.platform}"></td>
+
+        <td th:text="${#dates.format(log.updateTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+        <td th:text="${log.createdBy}"></td>
+
+        <td ><a th:href="${ '/model/edit/' + log.id}"  class="btn btn-info btn-sm">编辑</a>
+            &nbsp;&nbsp;&nbsp;
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+</div>
+
+
+<script type="text/javascript">
+
+
+    function goNext(id) {
+        //to
+        window.location.href = '/model/edit/'+id;
+    }
+
+    function addModel() {
+        window.location.href = '/model/edit/'
+    }
+
+    function clearLog() {
+
+
+        var domain = $('#platform_name').val();
+        // window.location.href = '/api/deleteAll';
+
+        // jQuery.post("/api/deleteAll",{domain:domain},function(result){
+        //     window.location.href = "/api"
+        // });
+
+
+        $.ajax({
+            type: "POST",
+            url: "/api/deleteAll",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({domain:domain}),
+            dataType: "json",
+            success: function (message) {
+                window.reload()
+                if (message > 0) {
+                    alert("请求已提交！我们会尽快与您取得联系");
+                }
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    function search() {
+        var domain = $('#platform_name').val();
+        var url = $('#url').val();
+        var createdBy = $('#createdBy').val();
+
+        window.location.href ='/model?domain='+domain +'&url=' +url + '&createdBy=' +createdBy;
+    }
+
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>-->
+<!--<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+
+<script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+
+
+</body>
+</html>
+

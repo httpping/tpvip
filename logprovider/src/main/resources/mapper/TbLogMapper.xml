@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tp.api.mapper.TbLogMapper">
+
+    <!-- 开启二级缓存 -->
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.tp.api.entity.TbLog">
+        <id column="id" property="id" />
+        <result column="url" property="url" />
+        <result column="request" property="request" />
+        <result column="response" property="response" />
+        <result column="apiname" property="apiname" />
+        <result column="domain" property="domain" />
+        <result column="version" property="version" />
+        <result column="platform" property="platform" />
+        <result column="fee_time" property="feeTime" />
+        <result column="ticket" property="ticket" />
+        <result column="visits_number" property="visitsNumber" />
+
+        <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+        <result column="created_time" property="createdTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, url, request, response, apiname, domain, version, platform, fee_time,update_time,created_time,ticket
+    </sql>
+
+
+    <select id="findByUrl" parameterType="string" resultMap="BaseResultMap">
+        SELECT * from tb_log where url = #{url}
+    </select>
+
+    <select id="findAll"  resultMap="BaseResultMap">
+        SELECT * from tb_log ORDER BY update_time desc
+    </select>
+</mapper>

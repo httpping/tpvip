@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tp.api.mapper.TbStringMapper">
+
+    <!-- 开启二级缓存 -->
+    <!--<cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>-->
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.tp.api.entity.TbString">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="value_en" property="valueEn" />
+        <result column="value_ar" property="valueAr" />
+        <result column="value_fr" property="valueFr" />
+        <result column="value_es" property="valueEs" />
+        <result column="value_tw" property="valueTw" />
+        <result column="value_de" property="valueDe" />
+        <result column="value_id" property="valueId" />
+        <result column="value_th" property="valueTh" />
+        <result column="value_id" property="valueId" />
+
+        <result column="version" property="version" />
+        <result column="domain" property="domain" />
+        <result column="flag" property="flag" />
+        <result column="update_time" property="updateTime" />
+        <result column="app_version" property="appVersion" />
+        <result column="app_version" property="appVersion" />
+
+        <result column="ticket" property="ticket" />
+
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        name, value_en, value_ar, value_fr, value_es, value_tw,value_de,value_id,domain,flag
+    </sql>
+
+</mapper>

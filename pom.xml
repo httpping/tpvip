@@ -10,8 +10,11 @@
 
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>Api</module>
+        <!--<module>Api</module>-->
         <module>common</module>
+        <module>logprovider</module>
+        <module>logconsumer</module>
+        <module>logapi</module>
     </modules>
 
     <properties>
@@ -49,6 +52,7 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.18</version>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -59,11 +63,11 @@
         </dependency>
 
         <!--热启动：每自修改后， 程序自动启动spring Application上下文。 -->
-        <dependency>
+      <!--  <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
+        </dependency>-->
         <!-- 阿里json -->
         <dependency>
             <groupId>com.alibaba</groupId>
@@ -118,6 +122,22 @@
 
 
     </dependencies>
+
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>Nexus Releases Repository Pro</name>
+            <url>http://10.32.3.193:8081/repository/demo/</url>
+        </repository>
+
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <name>Nexus Snapshots Repository Pro</name>
+            <url>http://10.32.3.193:8081/repository/demo-snapshot/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
 
     <!--<build>-->
         <!--<plugins>-->

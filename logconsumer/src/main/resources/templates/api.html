@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <title>移动组的日志系统</title>
+
+
+</head>
+<body>
+
+<header th:include="/common::header">
+
+</header>
+
+<!--
+<input type="text"  id="platform_name" class="form-control" placeholder="平台过滤:" aria-label="平台过滤:" />
+<button onclick="clearLog()" type="button" class="btn btn-dark">清除历史日志(默认所有)</button>
+-->
+<div style="margin: 20px">
+<div class="input-group mb-3" style="width:95%">
+
+    <input  th:value="${url}" id="platform_url" type="text" class="form-control" placeholder="过滤Url" aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
+    &nbsp;&nbsp;&nbsp;
+    <input  th:value="${domain}" id="platform_name" type="text" class="form-control" placeholder="过滤平台" aria-label="Recipient's username" aria-describedby="basic-addon2" onkeydown="filterEvent()">
+
+    &nbsp;&nbsp;&nbsp;
+    <div class="input-group-append">
+        <button  onclick="search()" class="btn btn-outline-secondary" type="button" >搜索历史日志</button>
+        &nbsp;&nbsp;&nbsp;
+        <button  onclick="clearLog()" class="btn btn-outline-secondary" type="button" >清除历史日志</button>
+    </div>
+</div>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col" style="width: 45%; max-width: 50%">Url</th>
+        <th scope="col">Domain</th>
+        <th scope="col">FeeTime(ms/N)</th>
+        <th scope="col">UpdateTime</th>
+        <th scope="col">Option</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="log ,logStat: ${logs}" onclick="goNext(${log.id})">
+        <th scope="row" th:text="${logStat.index + 1}"></th>
+        <td th:text="${log.url}" style="width: 45%"></td>
+        <td th:text="${log.domain}"></td>
+        <td th:text="${log.feeTime + '/' + log.visitsNumber}"></td>
+        <td th:text="${#dates.format(log.updateTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+        <td ><a th:href="${ '/api/delete/' + log.id}" class="btn btn-light btn-sm" >删除</a> &nbsp;&nbsp;<a th:href="${ '/api/show/' + log.id}"  class="btn btn-info btn-sm">查看</a>
+            &nbsp;&nbsp;  <a th:href="${ '/api/model/' + log.id}"  class="btn btn-info btn-sm" data-toggle="tooltip" data-placement="top" title="快速模拟会帮你根据现在的接口内容生成模拟接口数据   ">一键建模</a>&nbsp;&nbsp; <button type="button" th:onclick="'ticket(\'' + ${log.id.toString()} + '\',' + ${log.ticket} + ')'" th:class="${log.ticket == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'" th:text="${log.ticket == 1 ?'已锁定':'未锁定'}" data-toggle="tooltip" data-placement="top" title="锁定状态，不会更新接口数据内容"></button>
+
+
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+</div>
+
+
+<script type="text/javascript">
+
+
+    function goNext(id) {
+        //to
+        window.location.href = '/api/'+id;
+    }
+
+    function ticket(id,ticket) {
+
+        if (ticket == 0){
+            ticket = 1
+        }else{
+            ticket = 0
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/api/ticket",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({id:id,ticket:ticket}),
+            dataType: "json",
+            success: function (message) {
+                window.location.reload()
+
+            },
+            error: function (message) {
+            }
+        });
+    }
+
+    function clearLog() {
+
+        var domain = $('#platform_name').val();
+
+        $.ajax({
+            type: "POST",
+            url: "/api/deleteAll",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({domain:domain}),
+            dataType: "json",
+            success: function (message) {
+                window.location.reload()
+
+            },
+            error: function (message) {
+            }
+        });
+    }
+
+    function search() {
+        var domain = $('#platform_name').val().trim();
+        var url = $('#platform_url').val().trim();
+        window.location.href = '/api?domain=' + domain + '&url=' + url;
+    }
+
+    function filterEvent() {
+        if (event.keyCode == "13") {
+            search()
+        }
+    }
+
+</script>
+
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>-->
+<!--<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+
+<script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+
+<script>
+    $(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
+</body>
+</html>
+

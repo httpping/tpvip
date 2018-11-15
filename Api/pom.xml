@@ -16,12 +16,6 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>com.tp.vip</groupId>
-            <artifactId>common.tp</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -53,13 +47,18 @@
 
         <dependency>
             <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
+            <artifactId>jaxb-com.api</artifactId>
             <version>2.3.0</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.tp.vip</groupId>
+            <artifactId>common.tp</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
 
     </dependencies>
