@@ -13,6 +13,7 @@ import com.tp.api.service.TbStringService;
 import com.tp.api.utils.PageUtils;
 import com.tp.api.utils.StringXmlParse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +46,7 @@ import static com.tp.api.mode.BaseResponse.SUCCESS;
 @Controller
 @RequestMapping("/string")
 public class TbI18nController {
-    @Reference
+    @Autowired
     private VipConfig vipConfig;
     @Reference
     TbStringService tbStringService;

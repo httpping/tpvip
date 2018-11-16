@@ -1,5 +1,8 @@
 server:
-    port: 8090
+  port: 8090
+  servlet:
+#    context-path: /logcat
+#    path: /logcat
 
 
 #public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==

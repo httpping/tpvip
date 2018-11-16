@@ -18,7 +18,8 @@ spring:
       address: zookeeper://10.32.3.193:2181
     protocol:
       name: dubbo
-      port: 20883
+      port: 20888
+      timeout: 8000
     scan: com.tp.api.service
     provider:
       timeout: 8000
@@ -62,7 +63,7 @@ spring:
       connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=200;config.decrypt=true;config.decrypt.key=MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
       initial-size: 1
       #定义最大连接数
-      max-active: 200
+      max-active: 50
       max-wait: 60000
   mvc:
     throw-exception-if-no-handler-found: true
