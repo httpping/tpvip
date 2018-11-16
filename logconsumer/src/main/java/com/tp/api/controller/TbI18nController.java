@@ -2,6 +2,7 @@ package com.tp.api.controller;
 
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.plugins.Page;
 import com.tp.api.config.VipConfig;
 import com.tp.api.entity.TbString;
@@ -15,6 +16,7 @@ import com.tp.api.utils.StringXmlParse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MimeType;
@@ -50,6 +52,9 @@ public class TbI18nController {
     private VipConfig vipConfig;
     @Reference
     TbStringService tbStringService;
+
+    @Autowired
+    KafkaTemplate kafkaTemplate;
 
 
 
@@ -118,8 +123,9 @@ public class TbI18nController {
             for (TbString tbString :tbStrings){
                 tbString.setAppVersion(param.getAppVersion());
                 tbString.setDomain(param.getDomain());
+                kafkaTemplate.send("i18n", JSON.toJSONString(tbString));
             }
-            tbStringService.saveOrUpdateList(tbStrings);
+//            tbStringService.saveOrUpdateList(tbStrings);
         }
         return BaseResponse.created(SUCCESS, filePatterns +"/"+ fileName) ;
     }

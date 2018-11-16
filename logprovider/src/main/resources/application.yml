@@ -16,6 +16,7 @@ spring:
       timeout: 8000
     registry:
       address: zookeeper://10.32.3.193:2181
+      timeout: 100000
     protocol:
       name: dubbo
       port: 20888
@@ -72,6 +73,17 @@ spring:
   http:
     encoding:
       charset: UTF-8
+  kafka:
+    bootstrap-servers: 10.32.3.193:9092
+    consumer:
+      group-id: logcat
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+
+
 
 ## Dubbo 服务提供者配置
 #spring.dubbo.application.name=provider

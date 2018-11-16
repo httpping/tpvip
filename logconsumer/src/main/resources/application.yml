@@ -1,8 +1,6 @@
 server:
   port: 8090
-  servlet:
-#    context-path: /logcat
-#    path: /logcat
+
 
 
 #public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
@@ -70,7 +68,14 @@ spring:
       address: zookeeper://10.32.3.193:2181
       timeout: 100000
     scan: com.tp.api
-
+  kafka:
+    bootstrap-servers: 10.32.3.193:9092
+    consumer:
+      group-id: logcat
+      auto-offset-reset: latest
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
 
 
 vip:

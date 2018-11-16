@@ -52,7 +52,7 @@ public class WebSocketController {
                 tbLog.setId(IdWorker.getId());
                 exce(tbLog);
                 String url = URLEncoder.encode(tbLog.getUrl(),"utf-8");
-                String link = "&nbsp;&nbsp;&nbsp;<a href='/com.api/show?url=" +url+"' target='_blank'>查看格式化详情</a>" ;
+                String link = "&nbsp;&nbsp;&nbsp;<a href='/api/show?url=" +url+"' target='_blank'>查看格式化详情</a>" ;
                 logcat.setBody(link + logcat.getBody() +" <br/>");
             }
         } catch (Exception e) {
