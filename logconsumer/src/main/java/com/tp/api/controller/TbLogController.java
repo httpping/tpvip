@@ -33,10 +33,10 @@ import static com.tp.api.mode.BaseResponse.SUCCESS;
 @RequestMapping("/api")
 public class TbLogController {
 
-    @Reference
+    @Reference(timeout = 10000)
     TbLogService tbLogService;
 
-    @Reference
+    @Reference(timeout = 10000)
     ApiModelService apiModelService;
 
     @GetMapping

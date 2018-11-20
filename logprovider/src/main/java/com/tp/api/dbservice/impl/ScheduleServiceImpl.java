@@ -70,7 +70,7 @@ public class ScheduleServiceImpl {
     /**
      * 凌晨 0:01 执行插入当前统计记录,防止重复问题
      */
-    @Scheduled(cron = "1 0 0 * * ? ")
+    @Scheduled(cron = "1 1 0 * * ? ")
     public void createTbanalysis(){
         log.info("=====>>>>>使用cron  {}",System.currentTimeMillis());
 

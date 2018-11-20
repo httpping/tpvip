@@ -82,8 +82,11 @@ function load() {
 									field : 'valueDe',
 									title : 'De',
 									sortable: true
-								},
-								{
+								},{
+									field : 'valueIn',
+									title : 'In',
+									sortable: true
+                            	},{
 									field : 'flag',
 									title : '状态',
                                     sortable: true,
