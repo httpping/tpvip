@@ -30,7 +30,7 @@ public class ScheduleServiceImpl {
     DbTbAnalysisLogService tbAnalysisLogService;
 
 
-    public static final  int MAX_COUNT = 5000;
+    public static final  int MAX_COUNT = 3000;
 
     @Scheduled(cron = "0 15 7 * * ? ")
     public void deleteLog(){
@@ -83,6 +83,7 @@ public class ScheduleServiceImpl {
                 tbAnalysisLog.setCount(0);
                 tbAnalysisLog.setMonth(DateUtis.getCurrentMonth()+"");
                 tbAnalysisLog.setDay(DateUtis.getCurrentDay()+"");
+                tbAnalysisLog.setId(null);
                 tbAnalysisLogService.saveAndUpdate(tbAnalysisLog);
             }
 

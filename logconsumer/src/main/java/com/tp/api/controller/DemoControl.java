@@ -21,8 +21,6 @@ import java.util.Locale;
 @Controller
 public class DemoControl {
 
-
-
     @Autowired
     private MessageSource messageSource;
 

@@ -33,7 +33,7 @@ import static com.tp.api.mode.BaseResponse.SUCCESS;
 @RequestMapping("/api")
 public class TbLogController {
 
-    @Reference(timeout = 10000)
+    @Reference(timeout = 10000,filter = "tracing")
     TbLogService tbLogService;
 
     @Reference(timeout = 10000)

@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 @Service
 @Component
 public class TestServiceImpl implements TestService {
+
+
     @Override
     public String demo(String de) {
         log.info("test demo");
