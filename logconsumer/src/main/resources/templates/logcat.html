@@ -42,7 +42,6 @@
 <div id="toolbar" style="margin: 10px 10px 10px 20px;" class="form-row align-items-center">
     <img th:src="@{/static/images/logo.png}" width="35px" />&nbsp;
     <span class="t_num t_num1"></span>&nbsp;
-    tt
 
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
         <div class="btn-group mr-2" role="group" aria-label="First group">
@@ -142,7 +141,8 @@
 
         //判断当前浏览器是否支持WebSocket
         if ('WebSocket' in window) {
-            websocket = new WebSocket("ws://" + parser.host + "/websocket");
+            var platform = sessionStorage.getItem("platform_name"); //获取
+            websocket = new WebSocket("ws://" + parser.host + "/websocket?platform_name="+platform);
         }
         else {
             alert('Not support websocket')
@@ -158,6 +158,7 @@
         websocket.onopen = function (event) {
             setMessageInnerHTML("连接成功了...");
             alert("连接成功了...")
+
         }
 
         //接收到消息的回调方法
@@ -429,9 +430,9 @@
 
         sumCount();
 
-        getGroupBy();
+        // getGroupBy();
 
-    },15000);
+    },60000);
 
 
     /**
@@ -488,6 +489,8 @@
         var platform = $("#platform").val(); //获取
         //添加key-value 数据到 sessionStorage
         sessionStorage.setItem("platform_name", platform);
+
+        openSocket();
     }
 
 </script>

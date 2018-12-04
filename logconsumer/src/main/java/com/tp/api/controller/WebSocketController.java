@@ -3,6 +3,8 @@ package com.tp.api.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.toolkit.IdWorker;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.tp.api.config.websocket2.MyWebSocket;
 import com.tp.api.entity.TbLog;
 import com.tp.api.mode.LoggerMessage;
@@ -31,6 +33,18 @@ public class WebSocketController {
 
 
 
+    @HystrixCommand(fallbackMethod = "onError",
+            threadPoolKey ="WebSocketController",
+            groupKey = "WebSocketController",
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.strategy", value = "THREAD"),
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000"),
+                    @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+                    @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "5")},
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value = "50"),
+                    @HystrixProperty(name = "maxQueueSize", value = "150")
+            })
     @ApiOperation(value = "上传推送日志接口-- 只需要用这个其他的忽略")
     @PostMapping("/pullLogcat")
     @ResponseBody
@@ -62,7 +76,7 @@ public class WebSocketController {
         //发送消息
         try {
             String json = JSON.toJSON(logcat).toString();
-            MyWebSocket.sendInfo(json);
+            MyWebSocket.sendInfo(json,logcat.getPlatform());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -71,7 +85,11 @@ public class WebSocketController {
         return  "success";
     }
 
-    private void exce(final TbLog tbLog){
+    public String onError(@RequestBody LoggerMessage logcat) {
+        return "timeout";
+    }
+
+        private void exce(final TbLog tbLog){
         if (executorService == null){
             executorService = Executors.newFixedThreadPool(5);
         }
