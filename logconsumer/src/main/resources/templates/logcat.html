@@ -124,6 +124,8 @@
 
     });
 
+    //消息队列
+    var messages = [];
 
     //打开socket
     var websocket = null;
@@ -163,9 +165,13 @@
 
         //接收到消息的回调方法
         websocket.onmessage = function (event) {
-            setMessageInnerHTML(event.data);
-            allMsgNumber = allMsgNumber  + 1;
-            show_num1(allMsgNumber)
+
+            messages.push(event.data);
+            if (messages.length > max_logs){
+                //删除掉
+                messages.shift();
+            }
+
         }
 
         //连接关闭的回调方法
@@ -182,6 +188,20 @@
         /*]]>*/
 
     }
+
+
+
+    //这里用setTimeout 每秒钟最多消费 33条，其他的消息抛弃
+    window.setInterval(function () {
+        if (messages.length>0){
+            //消费消息
+            setMessageInnerHTML(messages.shift());
+            console.log('messages.length :' + messages.length)
+
+            allMsgNumber = allMsgNumber  + 1;
+            show_num1(allMsgNumber)
+        }
+    },30);
 
 
     //关闭连接
@@ -492,6 +512,11 @@
 
         openSocket();
     }
+
+
+
+
+
 
 </script>
 <script>
