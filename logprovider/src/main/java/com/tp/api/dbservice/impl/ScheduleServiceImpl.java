@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.mapper.Condition;
 import com.tp.api.dbservice.DbTbAnalysisLogService;
 import com.tp.api.dbservice.DbTbLogService;
 import com.tp.api.entity.TbAnalysisLog;
+import com.tp.api.entity.TbLog;
+import com.tp.api.entity.TbString;
 import com.tp.api.mode.LoggerMessage;
 import com.tp.api.service.TbAnalysisLogService;
 import com.tp.api.service.TbLogService;
@@ -29,8 +31,10 @@ public class ScheduleServiceImpl {
     @Autowired
     DbTbAnalysisLogService tbAnalysisLogService;
 
-
-    public static final  int MAX_COUNT = 3000;
+    /**
+     * 2000条数据触发删除操作
+     */
+    public static final  int MAX_COUNT = 2000;
 
     @Scheduled(cron = "0 15 7 * * ? ")
     public void deleteLog(){
@@ -46,21 +50,27 @@ public class ScheduleServiceImpl {
 
     /**
      * 工作时间每隔 半小时检查下 日志数量
+     * 1分钟工作一次
      */
-    @Scheduled(cron = "0 0/30 9-18 * * *")
+    @Scheduled(cron = "0 */1 * * * *")
 //    @Scheduled(cron = "0/5 * * * * *")
     public void deleteMaxLog(){
         log.info("=====>>>>>使用cron  {}",System.currentTimeMillis());
-
         try {
             Condition condition =  Condition.create();
-
             int tbLogs =  tbLogService.selectCount(condition);
             log.info("all count : "+tbLogs);
+
             //日志太多// 清理
             if (tbLogs > MAX_COUNT){
+                List<TbLog>  logs  = tbLogService.groupBy("platform");
                 deleteLog();
+                //保留平台数据
+                for (TbLog tbLog:logs) {
+                    tbLogService.save(tbLog);
+                }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }

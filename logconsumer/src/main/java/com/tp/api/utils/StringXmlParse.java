@@ -78,6 +78,12 @@ public class StringXmlParse {
                     tbString.setValueFr(value);
                 }else if (lang == LangEnum.ES){
                     tbString.setValueEs(value);
+                }else if(lang == LangEnum.TH){
+                    tbString.setValueTh(value);
+                }else if(lang == LangEnum.IN){
+                    tbString.setValueIn(value);
+                }else if(lang == LangEnum.TW){
+                    tbString.setValueTw(value);
                 }else {
                     tbString.setValueEn(value);
                 }

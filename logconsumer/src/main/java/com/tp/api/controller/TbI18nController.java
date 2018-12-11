@@ -123,7 +123,7 @@ public class TbI18nController {
             for (TbString tbString :tbStrings){
                 tbString.setAppVersion(param.getAppVersion());
                 tbString.setDomain(param.getDomain());
-                kafkaTemplate.send("i18n","key", JSON.toJSONString(tbString));
+                kafkaTemplate.send("i18n", (int) (Math.random()*4),"key", JSON.toJSONString(tbString));
             }
 //            tbStringService.saveOrUpdateList(tbStrings);
         }

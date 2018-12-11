@@ -27,7 +27,7 @@ public class DemoControl {
     public BaseResponse sayHello() throws NotFoundException {
 
         try {
-            kafkaTemplate.send("i18n", "key", "hello world" +i++);
+            kafkaTemplate.send("i18n", (int) (Math.random()*4),"key", "hello world" +i++);
             log.info("发送kafka成功.");
         } catch (Exception e) {
             log.error("发送kafka失败", e);

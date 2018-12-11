@@ -21,7 +21,7 @@ public class ProducerListener {
     @Autowired
     DbTbStringService dbTbStringService;
 
-    @KafkaListener(topicPartitions = {@TopicPartition(topic = "i18n",partitions ={"0"})})
+    @KafkaListener(topicPartitions = {@TopicPartition(topic = "i18n",partitions ={"0","1","2","3"})})
     public void listen(ConsumerRecord<String, ?> record) {
         log.info("kafka的key: " + record.key()+ record.partition());
         log.info("kafka的value: " + record.value().toString());

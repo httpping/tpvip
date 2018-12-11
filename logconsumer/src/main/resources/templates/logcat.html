@@ -201,7 +201,7 @@
             allMsgNumber = allMsgNumber  + 1;
             show_num1(allMsgNumber)
         }
-    },30);
+    },125);
 
 
     //关闭连接
@@ -355,6 +355,17 @@
         $("#log_content").append(str)
 
 
+
+        //jquery
+        $(window).scroll(function(){
+            var scrollTop = $(this).scrollTop();
+            var scrollHeight = $(document).height();
+            var windowHeight = $(this).height();
+            if(scrollTop + windowHeight == scrollHeight){
+                alert("已经到最底部了！");
+            }
+        });
+
         $("#log-container").scrollTop($("#log_content").height() - $("#log-container").height());
         // $("#log-container div").removeChild( $("#log-container div").firstChild());
         var lenth = $("#log_content").children().length;
@@ -434,7 +445,9 @@
 
                 // $('#analysis_btn').tooltip('当前冠军 NO1：'+ message.domain)
                 // $("#analysis_btn").html('<img src="/static/images/gold.png" style="width: 25px;height: 25px; margin-right: 10px"/>' +  '昨日冠军 :'+message.domain);
-                allMsgNumber = allMsgNumber + message.count;
+                if (allMsgNumber < message.count){
+                    allMsgNumber = message.count;
+                }
             },
             error: function (message) {
                 $("#request-process-patent").html("提交数据失败！");
