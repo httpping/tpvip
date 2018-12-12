@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <title>移动组的日志系统</title>
+
+    <style>
+
+
+    </style>
+</head>
+<body>
+<!-- Image and text -->
+
+<!--<header>-->
+    <!--<div class="collapse bg-dark" id="navbarHeader">-->
+        <!--<div class="container">-->
+            <!--<div class="row">-->
+                <!--<div class="col-sm-8 col-md-7 py-4">-->
+                    <!--<h4 class="text-white">沁园春·雪</h4>-->
+                    <!--<p class="text-muted">-->
+                        <!--北国风光，千里冰封，万里雪飘。-->
+                        <!--望长城内外，惟余莽莽；大河上下，顿失滔滔。-->
+                        <!--山舞银蛇，原驰蜡象，欲与天公试比高。-->
+                        <!--须晴日，看红装素裹，分外妖娆。-->
+                        <!--江山如此多娇，引无数英雄竞折腰。-->
+                        <!--惜秦皇汉武，略输文采；唐宗宋祖，稍逊风骚。-->
+                        <!--一代天骄，成吉思汗，只识弯弓射大雕。-->
+                        <!--俱往矣，数风流人物，还看今朝。</p>-->
+                <!--</div>-->
+                <!--<div class="col-sm-4 offset-md-1 py-4">-->
+                    <!--<h4 class="text-white">Contact</h4>-->
+                    <!--<ul class="list-unstyled">-->
+                        <!--<li><a href="#" class="text-white">Mobile R&D team</a></li>-->
+                        <!--<li><a href="https://github.com/" class="text-white">Follow on Github</a></li>-->
+                        <!--<li><a href="#" class="text-white">Email me</a></li>-->
+                    <!--</ul>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+
+
+    <!--<div class="navbar navbar-dark bg-dark box-shadow">-->
+        <!--<a href="#" class="navbar-brand">-->
+            <!--&lt;!&ndash;<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>&ndash;&gt;-->
+            <!--<strong>移动研发API模拟系统 >> 编辑</strong>-->
+        <!--</a>-->
+
+        <!--<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">-->
+            <!--<span class="navbar-toggler-icon"></span>-->
+        <!--</button>-->
+    <!--</div>-->
+<!--</header>-->
+
+<header th:include="/common::header"></header>
+
+
+
+<div style="margin: 20px">
+
+<div class="alert alert-success" id="alert_remind" role="alert" th:if="${success}" >
+    <strong>成功!</strong> 指定操作成功提示信息。
+</div>
+
+
+
+<form th:action="@{/model/edit}" method="post" >
+    <input type="hidden" id="id"  name="id" th:value="${model.id}" >
+
+    <div class="form-row">
+        <div class="form-group col-md-4">
+            <label for="inputEmail4">Platform</label>
+            <input type="text" class="form-control" id="inputEmail4" placeholder="android or ios" name="platform" th:value="${model.platform}">
+        </div>
+        <div class="form-group col-md-4">
+            <label for="inputPassword4">Domain</label>
+            <input type="text" class="form-control" id="inputPassword4" placeholder="zaful or rg or dl" name="domain" th:value="${model.domain}">
+        </div>
+
+        <div class="form-group col-md-4">
+            <label for="createdby">Created By</label>
+            <input type="text" class="form-control" id="createdby" placeholder="创建人" name="createdBy" th:value="${model.createdBy}">
+        </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-6">
+            <label for="url">Url</label>
+            <input type="text" class="form-control" id="url"  aria-describedby="emailHelp" placeholder="Enter url" name="url" th:value="${model.url}">
+        </div>
+        <div class="form-group col-md-6">
+            <label for="apiname">Name desc</label>
+            <input type="text" class="form-control" id="apiname" placeholder="apiname" name="apiname" th:value="${model.apiname}">
+        </div>
+    </div>
+
+    <!--<div class="form-group" >-->
+        <!--<label for="url">Url Address</label>-->
+        <!--<input  type="text" class="form-control" name="url" id="url" aria-describedby="emailHelp" placeholder="Enter url" th:value="${model.url}">-->
+        <!--<small id="emailHelp" class="form-text text-muted">We'll never share your url with anyone else.</small>-->
+    <!--</div>-->
+    <div class="form-group">
+        <label for="tv_response">Example Response</label>
+        <textarea id="tv_response" class="form-control" rows="25" th:text="${model.response}" name="response"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    &nbsp;&nbsp;&nbsp;
+    <a type="button" class="btn btn-link" th:if="${model.id != null}" th:href="${model.url}">See Details</a>
+
+</form>
+
+</div>
+
+<script th:inline="javascript">
+
+    window.setTimeout(function(){
+        $('[data-dismiss="alert"]').alert('close');
+    },2000);
+
+    //
+    // var message = [[${success}]];
+    // if (message){
+    //     $('#alert_remind').modal('show');
+    //     setTimeout(function(){
+    //         $("#alert_remind").modal("hide")
+    //     },1200);
+    // }else {
+    //     $("#alert_remind").modal("hide")
+    // }
+</script>
+
+<script type="text/javascript">
+
+
+
+
+    function goNext(id) {
+        //to
+        window.location.href = '/api/'+id;
+    }
+
+    function clearLog() {
+
+
+        var domain = $('#platform_name').val();
+        // window.location.href = '/api/deleteAll';
+
+        // jQuery.post("/api/deleteAll",{domain:domain},function(result){
+        //     window.location.href = "/api"
+        // });
+
+
+        $.ajax({
+            type: "POST",
+            url: "/api/deleteAll",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({domain:domain}),
+            dataType: "json",
+            success: function (message) {
+                window.reload()
+                if (message > 0) {
+                    alert("请求已提交！我们会尽快与您取得联系");
+                }
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    function search() {
+        var domain = $('#platform_name').val();
+        window.location.href ='/api?domain='+domain;
+    }
+
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>-->
+<!--<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+
+<script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+
+
+</body>
+</html>
+

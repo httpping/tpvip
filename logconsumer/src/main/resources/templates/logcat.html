@@ -19,6 +19,9 @@
     <script th:src="@{static/js/jquery.js}"></script>
     <script th:src="@{static/js/popper.min.js}"></script>
     <script th:src="@{static/js/bootstrap.js}"></script>
+    <script th:src="@{/static/js/notify.min.js}"></script>
+    <!--<script th:src="@{/static/js/notify.common.min.js}"></script>-->
+
     <link  rel="stylesheet" th:href="@{/static/css/bootstrap.css}"></link>
 
     <style>
@@ -40,7 +43,7 @@
 <body style="height: 100%;"  >
 
 <div id="toolbar" style="margin: 10px 10px 10px 20px;" class="form-row align-items-center">
-    <img th:src="@{/static/images/logo.png}" width="35px" />&nbsp;
+    <img th:src="@{/static/images/logo.png}" width="35px"  data-toggle="tooltip" data-placement="top" title="给作者打赏"  onclick="reward()"  />&nbsp;
     <span class="t_num t_num1"></span>&nbsp;
 
     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -53,12 +56,12 @@
 
             <button onclick="openOld()" type="button" class="btn btn-outline-success">历史日志</button>
             <button onclick="modelControler()" type="button" class="btn btn-outline-success">接口模拟</button>
-            <button id="analysis_btn" onclick="echartControler()" type="button" class="btn btn-outline-success" data-toggle="统计报表" data-placement="top">统计报表</button>
+            <button id="analysis_btn" onclick="echartControler()" type="button" class="btn btn-outline-success" data-toggle="统计报表" data-placement="top">APK下载管理</button>
 
         </div>
         <div class="btn-group" role="group" aria-label="Third group">
 
-            <button onclick="openApi()" type="button" class="btn btn-outline-dark">API 接入</button>
+            <button onclick="openApi()" type="button" class="btn btn-outline-dark">天天领红包</button>
             <button onclick="druidControler()" type="button" class="btn btn-outline-dark">性能监控</button>
         </div>
     </div>
@@ -87,11 +90,54 @@
 &nbsp;&nbsp; <input type="text" id="url_path" value="" onchange="urlChange()" placeholder="关键字过滤"/>
 <input id="text" type="hidden" placeholder="匿名勾搭"  onkeydown="send()"/>
 </div>
+
+
+<div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="card text-center">
+                <div class="card-header">
+                    <h5 id="title_name" class="card-title">非常感谢您的支持</h5>
+                </div>
+                <div class="card-body">
+                    <img th:src="@{/static/images/1544581773307.jpg}" style="width: 256px;">
+                </div>
+                <div class="card-footer text-muted">
+                    <p  id="apk_number" class="card-text">撸码不易，如果对你有所帮助，欢迎您的赞赏</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="linhongbao" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="card text-center">
+                <div class="card-header">
+                    <h5 id="title_name2" class="card-title">每天都能省一点</h5>
+                </div>
+                <div class="card-body">
+                    <img th:src="@{/static/images/1544583879844.jpg}" style="width: 256px;">
+                </div>
+                <div class="card-footer text-muted">
+                    <p  id="apk_number2" class="card-text">撸码不易，如果对你有所帮助，欢迎您的赞赏</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!--<hr/>-->
 <div id="log-container" style="height: 870px; width: 99%;  overflow-y: scroll; background: #333; color: #aaa; padding: 12px;">
     <div id="log_content"></div>
 </div>
 <script>
+
+
 
 
 
@@ -199,7 +245,7 @@
             console.log('messages.length :' + messages.length)
 
             allMsgNumber = allMsgNumber  + 1;
-            show_num1(allMsgNumber)
+            // show_num1(allMsgNumber)
         }
     },125);
 
@@ -267,14 +313,15 @@
         window.open('/model')
     }
     function echartControler() {
-        window.open('/echarts')
+        window.open('/apk')
     }
 
     /**
      * 接入方法
      */
     function openApi() {
-        window.open('/swagger-ui.html')
+        // window.open('/swagger-ui.html')
+        $('#linhongbao').modal('show')
     }
 
 
@@ -426,7 +473,7 @@
         });
     }
 
-    no1();
+    // no1();
 
 
 
@@ -455,17 +502,17 @@
         });
     }
 
-    sumCount();
+    // sumCount();
 
 
     //这里用setTimeout代替ajax请求进行演示
-    window.setInterval(function () {
+   /* window.setInterval(function () {
 
         sumCount();
 
         // getGroupBy();
 
-    },60000);
+    },60000);*/
 
 
     /**
@@ -528,7 +575,9 @@
 
 
 
-
+    function reward(){
+        $('#myModal').modal('show')
+    }
 
 
 </script>
@@ -575,6 +624,37 @@
         }
         $("#cur_num").val(n);
     }
+
+    var iN = new Notify({
+        interval: 500,
+        message: 'There is new message!',
+        notification:{
+            title: 'Notification!', // Set notification title
+            icon: '', // Set notification icon, The default is Favicon
+            body: 'You have a new message!',// Set message content
+            openurl: 'http://10.32.2.253:8090/apk'
+
+        }
+    });
+
+    // The chrome notification pops up, and the parameters are not passed as default values...
+    // iN.notify();
+    // window.Notification.requestPermission();
+    Notification.requestPermission(function (permission) {
+       alert(permission)
+    });
+
+    var per = iN.isPermission();
+
+    alert(per)
+
+
+    iN.notify({
+        title: 'Notification!', // Set notification title
+        body: 'You have a new message!', // Set message content
+        openurl: 'http://10.32.2.253:8090/apk'
+    });
+
 </script>
 
 </body>

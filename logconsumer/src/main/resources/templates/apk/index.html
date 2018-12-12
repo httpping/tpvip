@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script th:src="@{/static/js/qrcode.min.js}"></script>
+
+    <!-- Bootstrap CSS -->
+    <!--<link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">-->
+
+    <title>移动组的日志系统</title>
+
+    <style>
+
+
+
+    </style>
+</head>
+<body>
+<header th:include="/common::header"></header>
+
+<!--
+<input type="text"  id="platform_name" class="form-control" placeholder="平台过滤:" aria-label="平台过滤:" />
+<button onclick="clearLog()" type="button" class="btn btn-dark">清除历史日志(默认所有)</button>
+-->
+<div style="margin: 20px">
+<table class="table table-hover">
+    <thead class="thead-dark">
+    <tr>
+        <th scope="col">编译序列</th>
+        <th scope="col">编译通道</th>
+        <th scope="col">文件名</th>
+        <th scope="col">文件大小</th>
+        <th scope="col">改变日志</th>
+        <th scope="col">时间</th>
+        <th scope="col">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+
+
+    <tr th:each="apk ,apkStat: ${models}">
+        <th scope="row" th:text="${apk.number}"></th>
+        <td th:text="${apk.name}"></td>
+        <td th:text="${apk.fileName}"></td>
+        <td th:text="${#numbers.formatDecimal(apk.size/1024.0/1024,1,2) + 'M'}"></td>
+        <td style="width: 45%"><pre th:text="${apk.changeLog}" ></pre></td>
+        <td th:text="${#dates.format(apk.updateTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+        <td >
+            <a th:href="${ '/apk/' + apk.name}"  class="btn btn-info btn-sm">详情</a>
+            <!-- Large modal -->
+            <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" th:onclick="|showQr(${apk.number},'${apk.name}','${apk.path}','${apk.fileName}','${#dates.format(apk.updateTime, 'yyyy-MM-dd hh:mm:ss')}')|">下载</button>
+        </td>
+    </tr>
+
+    </tbody>
+</table>
+
+</div>
+
+<div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="card text-center">
+                <div class="card-header">
+                    <h5 id="title_name" class="card-title">Card title</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title " >二维码</h5>
+                    <div align="center" style="text-align: center;margin:0 auto; width: 256px;height: 256px;background-color: #0b2e13">
+                        <div id="qrcode"  align="center" class="text-center"> </div>
+                    </div>
+                    <p  id="file_name" class="card-text" style="margin-top: 10px">With supporting text below as a natural lead-in to additional content.</p>
+                    <a id="a_down"  href="#" class="btn btn-primary">立即下载</a>
+                </div>
+                <div class="card-footer text-muted">
+                    <p  id="apk_number" class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                </div>
+            </div>
+    </div>
+</div>
+</div>
+
+
+<script type="text/javascript">
+
+
+    function goNext(id) {
+        //to
+        window.location.href = '/model/edit/'+id;
+    }
+
+    function showQr(number,name,path,filename,updateTime) {
+
+        var url = "http://10.32.3.193:8080/jenkins/job/" + name +"/"+number +"/artifact/" + path;
+        // alert(url)
+        $('#qrcode').html(null);
+        var qrcode = new QRCode('qrcode', {
+            text: url,
+            width: 256,
+            height: 256,
+            colorDark : '#000000',
+            colorLight : '#ffffff',
+            correctLevel : QRCode.CorrectLevel.H
+        });
+
+        $('#apk_url').html(url)
+        $('#title_name').html(name)
+        $('#file_name').html(filename)
+        $('#apk_number').html(updateTime)
+
+
+        // $('#apk_download').href(url)
+
+        $('#a_down').attr('href',url);
+        $('#a_down').attr('download',name);
+
+        $('#myModal').modal('show')
+
+
+
+    }
+    function addModel() {
+        window.location.href = '/model/edit/'
+    }
+
+    function clearLog() {
+
+
+        var domain = $('#platform_name').val();
+        // window.location.href = '/api/deleteAll';
+
+        // jQuery.post("/api/deleteAll",{domain:domain},function(result){
+        //     window.location.href = "/api"
+        // });
+
+
+        $.ajax({
+            type: "POST",
+            url: "/api/deleteAll",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({domain:domain}),
+            dataType: "json",
+            success: function (message) {
+                window.reload()
+                if (message > 0) {
+                    alert("请求已提交！我们会尽快与您取得联系");
+                }
+            },
+            error: function (message) {
+                $("#request-process-patent").html("提交数据失败！");
+            }
+        });
+    }
+
+    function search() {
+        var domain = $('#platform_name').val();
+        var url = $('#url').val();
+        var createdBy = $('#createdBy').val();
+
+        window.location.href ='/model?domain='+domain +'&url=' +url + '&createdBy=' +createdBy;
+    }
+
+</script>
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js" ></script>-->
+<!--<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+<!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>-->
+
+<script type="text/javascript" color="0,0,255" opacity='0.7' zIndex="-2" count="150" src="//cdn.bootcss.com/canvas-nest.js/1.0.1/canvas-nest.min.js"></script>
+
+</body>
+</html>
+
