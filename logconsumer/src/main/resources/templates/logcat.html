@@ -19,8 +19,6 @@
     <script th:src="@{static/js/jquery.js}"></script>
     <script th:src="@{static/js/popper.min.js}"></script>
     <script th:src="@{static/js/bootstrap.js}"></script>
-    <script th:src="@{/static/js/notify.min.js}"></script>
-    <!--<script th:src="@{/static/js/notify.common.min.js}"></script>-->
 
     <link  rel="stylesheet" th:href="@{/static/css/bootstrap.css}"></link>
 
@@ -625,35 +623,6 @@
         $("#cur_num").val(n);
     }
 
-    var iN = new Notify({
-        interval: 500,
-        message: 'There is new message!',
-        notification:{
-            title: 'Notification!', // Set notification title
-            icon: '', // Set notification icon, The default is Favicon
-            body: 'You have a new message!',// Set message content
-            openurl: 'http://10.32.2.253:8090/apk'
-
-        }
-    });
-
-    // The chrome notification pops up, and the parameters are not passed as default values...
-    // iN.notify();
-    // window.Notification.requestPermission();
-    Notification.requestPermission(function (permission) {
-       alert(permission)
-    });
-
-    var per = iN.isPermission();
-
-    alert(per)
-
-
-    iN.notify({
-        title: 'Notification!', // Set notification title
-        body: 'You have a new message!', // Set message content
-        openurl: 'http://10.32.2.253:8090/apk'
-    });
 
 </script>
 
