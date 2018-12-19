@@ -47,6 +47,7 @@ public class MyWebSocket {
             }
 
             sendMessage("有新连接加入！当前在线人数为" + getOnlineCount());
+            sendMessage(" =======   <a  onclick='openApi()' style='color:gold;'>每天都能省一点天天领红包-点击此处</a>  ======");
         } catch (IOException e) {
             System.out.println("IO异常");
         }

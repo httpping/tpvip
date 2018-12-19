@@ -26,6 +26,7 @@ spring:
       timeout: 8000
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
   thymeleaf:
     prefix: classpath:/templates
   cache:
@@ -37,7 +38,7 @@ spring:
     encoding: utf-8
   #数据源配置
   datasource:
-    url: jdbc:mysql://10.32.2.253:3306/cmvip
+    url: jdbc:mysql://10.32.2.253:3306/cmvip?serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==

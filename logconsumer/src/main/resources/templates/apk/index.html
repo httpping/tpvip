@@ -42,13 +42,14 @@
 
     <tr th:each="apk ,apkStat: ${models}">
         <th scope="row" th:text="${apk.number}"></th>
-        <td th:text="${apk.name}"></td>
+        <td ><h6 th:text="${apk.name}"></h6><span th:if="${#strings.containsIgnoreCase(apk.fileName,'_release')}" class="badge badge-success">release</span>
+         </td>
         <td th:text="${apk.fileName}"></td>
         <td th:text="${#numbers.formatDecimal(apk.size/1024.0/1024,1,2) + 'M'}"></td>
         <td style="width: 45%"><pre th:text="${apk.changeLog}" ></pre></td>
-        <td th:text="${#dates.format(apk.updateTime, 'yyyy-MM-dd hh:mm:ss')}"></td>
+        <td th:text="${#dates.format(apk.updateTime, 'yyyy-MM-dd HH:mm:ss')}"></td>
         <td >
-            <a th:href="${ '/apk/' + apk.name}"  class="btn btn-info btn-sm">详情</a>
+            <a  th:style="${isDetail} ? 'display:none':''" th:href="${ '/apk/' + apk.name}"  class="btn btn-info btn-sm">详情</a>
             <!-- Large modal -->
             <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal" th:onclick="|showQr(${apk.number},'${apk.name}','${apk.path}','${apk.fileName}','${#dates.format(apk.updateTime, 'yyyy-MM-dd hh:mm:ss')}')|">下载</button>
         </td>

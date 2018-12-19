@@ -1,6 +1,7 @@
 package com.tp.api.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.validation.MethodValidated;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.toolkit.IdWorker;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
@@ -65,6 +66,7 @@ public class WebSocketController {
                 tbLog.setFeeTime(logcat.getFeeTime());
                 tbLog.setId(IdWorker.getId());
                 exce(tbLog);
+//                tbLog = tbLogService.save(tbLog);
                 String url = URLEncoder.encode(tbLog.getUrl(),"utf-8");
                 String link = "&nbsp;&nbsp;&nbsp;<a href='/api/show?url=" +url+"' target='_blank'>查看格式化详情</a>" ;
                 logcat.setBody(link + logcat.getBody() +" <br/>");

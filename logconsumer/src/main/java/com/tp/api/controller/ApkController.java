@@ -35,6 +35,16 @@ public class ApkController {
         return "/apk/index";
     }
 
+    @GetMapping("/album")
+    public String apiBuf(Model model, ApkInfo request){
+        List<ApkInfo> result = apkInfosService.apkGroup();
+        model.addAttribute("request",request);
+        model.addAttribute("models",result);
+        model.addAttribute("headerTitle","Apk管理");
+
+        return "/apk/index-album";
+    }
+
     @GetMapping("/{name}")
     public String apiName(Model model, @PathVariable String name){
         ApkInfo apkInfo = new ApkInfo();
@@ -42,8 +52,9 @@ public class ApkController {
         List<ApkInfo> result = apkInfosService.query(apkInfo);
         model.addAttribute("models",result);
         model.addAttribute("headerTitle",name);
+        model.addAttribute("isDetail",true);
 
-        return "/apk/index-name";
+        return "/apk/index";
     }
 
 
