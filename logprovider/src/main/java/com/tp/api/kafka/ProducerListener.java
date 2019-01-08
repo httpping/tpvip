@@ -30,6 +30,10 @@ public class ProducerListener {
 
         TbString tbString = (TbString) JSON.parseObject(value,TbString.class);
         //s升级
-        dbTbStringService.saveOrUpdate(tbString);
+        try {
+            dbTbStringService.saveOrUpdate(tbString);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 }

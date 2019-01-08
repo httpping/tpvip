@@ -15,7 +15,7 @@ spring:
       name: log-provider
       timeout: 8000
     registry:
-      address: zookeeper://10.32.3.193:2181
+      address: zookeeper://10.32.2.200:2181
       timeout: 100000
     protocol:
       name: dubbo
@@ -38,7 +38,7 @@ spring:
     encoding: utf-8
   #数据源配置
   datasource:
-    url: jdbc:mysql://10.32.2.253:3306/cmvip?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://10.32.3.108:3306/cmvip?serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
@@ -75,7 +75,7 @@ spring:
     encoding:
       charset: UTF-8
   kafka:
-    bootstrap-servers: 10.32.3.193:9092
+    bootstrap-servers: 10.32.2.200:9092
     consumer:
       group-id: logcat
       auto-offset-reset: latest

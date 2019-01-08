@@ -1,6 +1,7 @@
 package com.tp.api.entity;
 
 import com.baomidou.mybatisplus.activerecord.Model;
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
@@ -71,6 +72,9 @@ public class TbLog extends Model<TbLog> {
      * 访问次数
      */
     private int visitsNumber;
+
+    @TableField(exist = false)
+    private String test;
 
     @Override
     protected Serializable pkVal() {

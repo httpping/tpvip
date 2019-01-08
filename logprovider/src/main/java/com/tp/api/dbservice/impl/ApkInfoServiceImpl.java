@@ -62,9 +62,15 @@ public class ApkInfoServiceImpl extends ServiceImpl <ApkInfoMapper, ApkInfo> imp
         @Override
         public List<ApkInfo> query(ApkInfo model){
             Condition condition =  Condition.create();
+
+            if (model.getId() !=null){
+                condition.where("id ={0}",model.getId());
+            }
+
             if (!StringUtils.isEmpty(model.getName())){
                 condition.where("name={0}",model.getName());
             }
+
             condition.orderBy("update_time",false);
             List<ApkInfo> logs = baseMapper.selectList(condition);
 

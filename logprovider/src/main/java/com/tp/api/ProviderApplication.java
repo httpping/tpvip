@@ -16,9 +16,9 @@ import org.springframework.web.cors.CorsConfiguration;
 @Slf4j
 public class ProviderApplication {
     public static void main(String[] args) {
-
-        log.info("start");
         SpringApplication.run(ProviderApplication.class, args);
+        log.info("start");
+
     }
 
 

@@ -9,6 +9,24 @@ server:
 #    learning: debug
 #  config: classpath:logback-boot.xml
 
+
+market:
+  ios: http://10.32.100.232:8080
+  android: http://10.32.2.200:8080/jenkins
+
+mygit:
+  url: https://github.com/httpping/iosipatest.git
+  local-path:  /home/longxl/jar/git
+
+
+https:
+  port: 8443
+  ssl:
+    key-store: classpath:globale_clothes.jks
+    key-store-password: globale_clothes
+    key-password: globale_clothes
+
+
 spring:
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -31,7 +49,7 @@ spring:
       charset: UTF-8
 #数据源配置
   datasource:
-    url: jdbc:mysql://10.32.2.253:3306/cmvip
+    url: jdbc:mysql://10.32.3.108:3306/cmvip
     username: root
     password: 123456
     public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==
@@ -65,11 +83,11 @@ spring:
       name: log-consumer
       timeout: 8000
     registry:
-      address: zookeeper://10.32.3.193:2181
+      address: zookeeper://10.32.2.200:2181
       timeout: 100000
     scan: com.tp.api
   kafka:
-    bootstrap-servers: 10.32.3.193:9092
+    bootstrap-servers: 10.32.2.200:9092
     consumer:
       group-id: logcat
       auto-offset-reset: latest

@@ -19,7 +19,7 @@ import java.util.List;
 public interface DbTbStringService extends IService<TbString> {
 
 
-    TbString saveOrUpdate(TbString tbString);
+    TbString saveOrUpdate(TbString tbString) throws IllegalAccessException;
 
 
     Page<TbString> select(StringFilterRequestParam param);
@@ -27,6 +27,6 @@ public interface DbTbStringService extends IService<TbString> {
 
     List<TbString> groupBy(String name);
 
-    boolean saveOrUpdateList(List<TbString> tbStrings);
+    boolean saveOrUpdateList(List<TbString> tbStrings) throws IllegalAccessException;
 
 }

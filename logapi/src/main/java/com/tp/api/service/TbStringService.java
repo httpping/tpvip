@@ -19,7 +19,7 @@ import java.util.List;
 public interface TbStringService  {
 
 
-    TbString saveOrUpdate(TbString tbString);
+    TbString saveOrUpdate(TbString tbString) ;
 
 
     Page<TbString> select(StringFilterRequestParam param);
@@ -27,6 +27,6 @@ public interface TbStringService  {
 
     List<TbString> groupBy(String name);
 
-    boolean saveOrUpdateList(List<TbString> tbStrings);
+    boolean saveOrUpdateList(List<TbString> tbStrings) ;
 
 }

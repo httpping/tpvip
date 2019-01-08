@@ -102,7 +102,7 @@
 
     function showQr(number,name,path,filename,updateTime) {
 
-        var url = "http://10.32.3.193:8080/jenkins/job/" + name +"/"+number +"/artifact/" + path;
+        var url = "http://10.32.2.200:8080/jenkins/job/" + name +"/"+number +"/artifact/" + path;
         // alert(url)
         $('#qrcode').html(null);
         var qrcode = new QRCode('qrcode', {

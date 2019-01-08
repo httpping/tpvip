@@ -18,7 +18,12 @@ public class DubboTbStringService implements TbStringService{
 
     @Override
     public TbString saveOrUpdate(TbString tbString) {
-        return dbTbStringService.saveOrUpdate(tbString);
+        try {
+            return dbTbStringService.saveOrUpdate(tbString);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return tbString;
     }
 
     @Override
@@ -32,7 +37,12 @@ public class DubboTbStringService implements TbStringService{
     }
 
     @Override
-    public boolean saveOrUpdateList(List<TbString> tbStrings) {
-        return dbTbStringService.saveOrUpdateList(tbStrings);
+    public boolean saveOrUpdateList(List<TbString> tbStrings)  {
+        try {
+            return dbTbStringService.saveOrUpdateList(tbStrings);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

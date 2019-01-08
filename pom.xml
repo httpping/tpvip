@@ -189,6 +189,12 @@
             <artifactId>ehcache</artifactId>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.google.guava/guava -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>27.0.1-jre</version>
+        </dependency>
 
     </dependencies>
 
@@ -197,13 +203,13 @@
         <repository>
             <id>nexus-releases</id>
             <name>Nexus Releases Repository Pro</name>
-            <url>http://10.32.3.193:8081/repository/demo/</url>
+            <url>http://10.32.2.200:8081/repository/demo/</url>
         </repository>
 
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>Nexus Snapshots Repository Pro</name>
-            <url>http://10.32.3.193:8081/repository/demo-snapshot/</url>
+            <url>http://10.32.2.200:8081/repository/demo-snapshot/</url>
         </snapshotRepository>
     </distributionManagement>
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.activerecord.Model;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -15,6 +16,8 @@ import java.io.Serializable;
  * @author tanping
  * @since 2018-12-11
  */
+
+@Data
 public class ApkInfo extends Model<ApkInfo> {
 
     private static final long serialVersionUID = 1L;
@@ -67,122 +70,20 @@ public class ApkInfo extends Model<ApkInfo> {
     private Integer status;
 
 
-    public Long getId() {
-        return id;
-    }
+    private String plistUrl;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private Integer platform;
 
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public Integer getSize() {
-        return size;
-    }
-
-    public void setSize(Integer size) {
-        this.size = size;
-    }
-
-    public String getEmails() {
-        return emails;
-    }
-
-    public void setEmails(String emails) {
-        this.emails = emails;
-    }
-
-    public String getChangeLog() {
-        return changeLog;
-    }
-
-    public void setChangeLog(String changeLog) {
-        this.changeLog = changeLog;
-    }
-
-    public Long getDuration() {
-        return duration;
-    }
-
-    public void setDuration(Long duration) {
-        this.duration = duration;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Date getCreatedTime() {
-        return createdTime;
-    }
-
-    public void setCreatedTime(Date createdTime) {
-        this.createdTime = createdTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+    @TableField(exist = false)
+    private String appBundle;
+    @TableField(exist = false)
+    private String appVersion;
 
     @Override
     protected Serializable pkVal() {
         return this.id;
     }
 
-    @Override
-    public String toString() {
-        return "ApkInfo{" +
-        ", id=" + id +
-        ", name=" + name +
-        ", number=" + number +
-        ", fileName=" + fileName +
-        ", path=" + path +
-        ", size=" + size +
-        ", emails=" + emails +
-        ", changeLog=" + changeLog +
-        ", duration=" + duration +
-        ", updateTime=" + updateTime +
-        ", createdTime=" + createdTime +
-        ", status=" + status +
-        "}";
-    }
+
 }

@@ -26,15 +26,20 @@ public class TbStringServiceImpl extends ServiceImpl<TbStringMapper, TbString> i
 
 
     @Override
-    public TbString saveOrUpdate(TbString tbString) {
+    public TbString saveOrUpdate(TbString tbString) throws IllegalAccessException {
 
         tbString.setVersion(1);
         Condition condition =  Condition.create();
         if (!StringUtils.isEmpty(tbString.getName())) {
             condition.where("name = {0}", tbString.getName());
+        }else {
+            throw new IllegalAccessException("name is null");
         }
+        //
         if (!StringUtils.isEmpty(tbString.getDomain())) {
             condition.and("domain = {0}", tbString.getDomain());
+        }else {
+            throw new IllegalAccessException("domain is null");
         }
         List<TbString> tbStrings = baseMapper.selectList(condition);
 
@@ -97,7 +102,7 @@ public class TbStringServiceImpl extends ServiceImpl<TbStringMapper, TbString> i
     }
 
     @Override
-    public boolean saveOrUpdateList(List<TbString> tbStrings) {
+    public boolean saveOrUpdateList(List<TbString> tbStrings) throws IllegalAccessException {
 
         for (TbString tb : tbStrings) {
              saveOrUpdate(tb);

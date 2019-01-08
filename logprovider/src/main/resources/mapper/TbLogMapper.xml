@@ -18,7 +18,7 @@
         <result column="fee_time" property="feeTime" />
         <result column="ticket" property="ticket" />
         <result column="visits_number" property="visitsNumber" />
-
+        <result column="test" property="test"></result>
         <result column="update_time" property="updateTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
         <result column="created_time" property="createdTime" javaType="java.util.Date" jdbcType="TIMESTAMP"/>
     </resultMap>

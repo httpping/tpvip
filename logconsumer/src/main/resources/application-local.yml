@@ -1,3 +1,7 @@
 
 vip:
   uploadPath: D:/upload/
+
+mygit:
+  url: https://github.com/httpping/iosipatest.git
+  local-path:  D:/upload/git

@@ -50,7 +50,7 @@ public class TbLogServiceImpl extends ServiceImpl<TbLogMapper, TbLog> implements
             tbLog.setCreatedTime(result.getCreatedTime());
 
             //和上一次的结果取 平均值
-            if (result.getFeeTime()>0){
+            if (result.getFeeTime()!=null && result.getFeeTime()>0){
                 int avg = (tbLog.getFeeTime() + result.getFeeTime())/2;
                 tbLog.setFeeTime(avg);
             }
