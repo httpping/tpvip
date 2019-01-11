@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Service
+@Service(filter = "tracing")
 public class DubboApiModelService implements ApiModelService{
 
     @Autowired

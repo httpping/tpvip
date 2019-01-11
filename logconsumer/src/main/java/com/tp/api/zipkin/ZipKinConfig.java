@@ -11,12 +11,12 @@ import zipkin2.reporter.beans.OkHttpSenderFactoryBean;
 @Configuration
 public class ZipKinConfig {
 
-
+    public static final String FILTER = "tracing";
 
     @Bean
     public OkHttpSenderFactoryBean sender(){
         OkHttpSenderFactoryBean bean = new OkHttpSenderFactoryBean();
-        bean.setEndpoint("http://10.32.2.253:9411/api/v2/spans");
+        bean.setEndpoint("http://10.32.3.108:9411/api/v2/spans");
         return bean;
     }
 

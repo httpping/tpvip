@@ -18,7 +18,7 @@ import java.util.List;
  * @author tanping
  * @since 2018-10-19
  */
-@Service
+@Service(filter = "tracing")
 public class DubbboTbAnalysisLogService implements TbAnalysisLogService {
 
      @Autowired

@@ -21,6 +21,8 @@ import java.net.URLEncoder;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.tp.api.zipkin.ZipKinConfig.FILTER;
+
 @Api(value = "上传推送接口 -- 重要",description = "上传推送接口 -- 重要")
 @Controller
 public class WebSocketController {
@@ -29,7 +31,7 @@ public class WebSocketController {
 
     ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-    @Reference
+    @Reference(timeout = 10000,filter = FILTER)
     TbLogService tbLogService;
 
 

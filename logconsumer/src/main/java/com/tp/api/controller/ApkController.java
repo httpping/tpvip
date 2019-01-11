@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
+import static com.tp.api.zipkin.ZipKinConfig.FILTER;
+
 /**
  * apk 打包管理
  */
@@ -27,7 +29,7 @@ import java.util.List;
 public class ApkController {
 
 
-    @Reference
+    @Reference(timeout = 10000,filter = FILTER)
     ApkInfosService apkInfosService;
 
     @Autowired

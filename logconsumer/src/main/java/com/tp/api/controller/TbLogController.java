@@ -18,6 +18,7 @@ import java.net.URI;
 import java.util.List;
 
 import static com.tp.api.mode.BaseResponse.SUCCESS;
+import static com.tp.api.zipkin.ZipKinConfig.FILTER;
 
 
 /**
@@ -33,7 +34,7 @@ import static com.tp.api.mode.BaseResponse.SUCCESS;
 @RequestMapping("/api")
 public class TbLogController {
 
-    @Reference(timeout = 10000,filter = "tracing")
+    @Reference(timeout = 10000,filter = FILTER)
     TbLogService tbLogService;
 
     @Reference(timeout = 10000)

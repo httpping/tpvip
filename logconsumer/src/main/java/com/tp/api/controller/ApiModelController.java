@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+import static com.tp.api.zipkin.ZipKinConfig.FILTER;
+
 /**
  * <p>
  *  前端控制器 com.api 模拟中心
@@ -27,7 +29,7 @@ import java.util.List;
 @RequestMapping("/model")
 public class ApiModelController {
 
-    @Reference
+    @Reference(timeout = 10000,filter = FILTER)
     ApiModelService apiModelService;
 
     @GetMapping

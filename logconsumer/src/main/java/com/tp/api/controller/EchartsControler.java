@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static com.tp.api.zipkin.ZipKinConfig.FILTER;
+
 @Slf4j
 @Controller
 @RequestMapping("/echarts")
 public class EchartsControler {
 
-    @Reference
+    @Reference(timeout = 10000,filter = FILTER)
     TbAnalysisLogService tbAnalysisLogService;
 
 

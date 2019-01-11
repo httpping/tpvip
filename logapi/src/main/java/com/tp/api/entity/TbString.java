@@ -67,8 +67,15 @@ public class TbString extends Model<TbString> {
      */
     private String valueIn;
 
+    /**
+     * 意大利
+     */
+    private String valueIt;
 
-
+    /**
+     * 葡萄牙
+     */
+    private String valuePt;
 
 
     private String domain = "zaful";
@@ -77,6 +84,7 @@ public class TbString extends Model<TbString> {
      * 1 删除
      */
     private Integer flag ;
+
 
 
 

@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * dubbo 请求
  */
-@Service
+@Service(filter = "tracing")
 public class DubboApiInfoService implements ApkInfosService {
 
     @Autowired

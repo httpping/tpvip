@@ -35,6 +35,7 @@ import java.util.UUID;
 
 import static com.tp.api.config.WebConfig.filePatterns;
 import static com.tp.api.mode.BaseResponse.SUCCESS;
+import static com.tp.api.zipkin.ZipKinConfig.FILTER;
 
 /**
  * <p>
@@ -50,7 +51,7 @@ import static com.tp.api.mode.BaseResponse.SUCCESS;
 public class TbI18nController {
     @Autowired
     private VipConfig vipConfig;
-    @Reference
+    @Reference(timeout = 10000,filter = FILTER)
     TbStringService tbStringService;
 
     @Autowired

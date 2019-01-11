@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-@Service(filter="filter")
+@Service(filter = "tracing")
 public class DubboTbLogService implements TbLogService {
 
     @Autowired
