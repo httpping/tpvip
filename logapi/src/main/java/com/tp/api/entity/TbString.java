@@ -77,6 +77,11 @@ public class TbString extends Model<TbString> {
      */
     private String valuePt;
 
+    /**
+     * 中文
+     */
+
+    private String valueZh;
 
     private String domain = "zaful";
 

@@ -20,7 +20,7 @@
         <result column="value_id" property="valueId" />
         <result column="value_it" property="valueIt" />
         <result column="value_pt" property="valuePt" />
-
+        <result column="value_zh" property="valueZh"/>
 
         <result column="version" property="version" />
         <result column="domain" property="domain" />
@@ -30,6 +30,7 @@
         <result column="app_version" property="appVersion" />
 
         <result column="ticket" property="ticket" />
+
 
     </resultMap>
 

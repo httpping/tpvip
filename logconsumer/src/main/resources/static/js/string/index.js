@@ -95,6 +95,10 @@ function load() {
 									title : 'Pt',
 									sortable: true
                             	},{
+                                field : 'valueZh',
+                                title : 'Zh',
+                                sortable: true
+                            	},{
 									field : 'flag',
 									title : '状态',
                                     sortable: true,

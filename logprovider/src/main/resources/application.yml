@@ -38,7 +38,7 @@ spring:
     encoding: utf-8
   #数据源配置
   datasource:
-    url: jdbc:mysql://10.32.3.108:3306/cmvip?serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://10.19.6.57:3306/cmvip?serverTimezone=Asia/Shanghai
     username: root
     password: 123456
     public-key: MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJJOxnCSrET2GzsYW3LB+GCo7yHTIeiii3qC7BlmjZwohXGA8hnTl1NwH9cgGwLvK8LnJ3tFe8cpBPvHq9VVKgsCAwEAAQ==

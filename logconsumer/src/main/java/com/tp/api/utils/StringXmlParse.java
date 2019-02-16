@@ -2,6 +2,7 @@ package com.tp.api.utils;
 
 import com.tp.api.entity.TbString;
 import com.tp.api.entity.enums.LangEnum;
+import org.apache.ibatis.annotations.Lang;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -84,6 +85,12 @@ public class StringXmlParse {
                     tbString.setValueIn(value);
                 }else if(lang == LangEnum.TW){
                     tbString.setValueTw(value);
+                }else if (lang == LangEnum.ZH){
+                    tbString.setValueZh(value);
+                }else if (lang == LangEnum.IT){
+                    tbString.setValueIt(value);
+                }else if (lang == LangEnum.PT){
+                    tbString.setValuePt(value);
                 }else {
                     tbString.setValueEn(value);
                 }
